@@ -1,11 +1,11 @@
 Class {
-	#name : #PhxPackageRepositoryManager2,
+	#name : #PhxDependencyVisualizer,
 	#superclass : #Object,
 	#category : #'Phx-Dependency-Visualizer'
 }
 
 { #category : #model }
-PhxPackageRepositoryManager2 class >> allPhxPackages [
+PhxDependencyVisualizer class >> allPhxPackages [
 
 	| patterns |
 	patterns := { 'phx*'. 'biti'. 'Pharo-home*' . '*ecg*'}.
@@ -14,7 +14,7 @@ PhxPackageRepositoryManager2 class >> allPhxPackages [
 ]
 
 { #category : #model }
-PhxPackageRepositoryManager2 class >> allPhxPackagesDependingOn: aPackageName [
+PhxDependencyVisualizer class >> allPhxPackagesDependingOn: aPackageName [
 
 	| pNames |
 	pNames := self dependenciesOf: aPackageName.
@@ -22,7 +22,7 @@ PhxPackageRepositoryManager2 class >> allPhxPackagesDependingOn: aPackageName [
 ]
 
 { #category : #model }
-PhxPackageRepositoryManager2 class >> allPhxRepositories [
+PhxDependencyVisualizer class >> allPhxRepositories [
 "
 self allPhxRepositories
 "
@@ -34,7 +34,7 @@ self allPhxRepositories
 ]
 
 { #category : #model }
-PhxPackageRepositoryManager2 class >> allPhxRepositoriesWithoutPharoX [
+PhxDependencyVisualizer class >> allPhxRepositoriesWithoutPharoX [
 "
 self allPhxRepositoriesWithoutPharoX
 "
@@ -42,19 +42,19 @@ self allPhxRepositoriesWithoutPharoX
 ]
 
 { #category : #model }
-PhxPackageRepositoryManager2 class >> containingRepositoriesOfPackage: aPackage [  
+PhxDependencyVisualizer class >> containingRepositoriesOfPackage: aPackage [  
 
 	^IceRepository registry select: [ :p | p includesPackageNamed:  aPackage name ]
 ]
 
 { #category : #model }
-PhxPackageRepositoryManager2 class >> dependenciesOf: aPackageName [
+PhxDependencyVisualizer class >> dependenciesOf: aPackageName [
 
 	^ DADependencyChecker new dependenciesOf: aPackageName
 ]
 
 { #category : #visualisation }
-PhxPackageRepositoryManager2 class >> graph [
+PhxDependencyVisualizer class >> graph [
 
 	<script>
 	| data boxes canvas rslayout |
@@ -108,7 +108,7 @@ PhxPackageRepositoryManager2 class >> graph [
 ]
 
 { #category : #visualisation }
-PhxPackageRepositoryManager2 class >> marker [
+PhxDependencyVisualizer class >> marker [
 	|  marker |
 "	theme := self theme."
 	marker := RSShapeFactory arrow.
@@ -121,7 +121,7 @@ PhxPackageRepositoryManager2 class >> marker [
 ]
 
 { #category : #visualisation }
-PhxPackageRepositoryManager2 class >> newLineBuilder [
+PhxDependencyVisualizer class >> newLineBuilder [
 
 	| marker |
 	marker := self marker.
@@ -136,7 +136,7 @@ PhxPackageRepositoryManager2 class >> newLineBuilder [
 ]
 
 { #category : #visualisation }
-PhxPackageRepositoryManager2 class >> newShapeFor: model [
+PhxDependencyVisualizer class >> newShapeFor: model [
 	| label box |
 	label := RSLabel new
 		text: model name;
@@ -154,19 +154,19 @@ PhxPackageRepositoryManager2 class >> newShapeFor: model [
 ]
 
 { #category : #model }
-PhxPackageRepositoryManager2 class >> packagesWithMultipleRepositories [
+PhxDependencyVisualizer class >> packagesWithMultipleRepositories [
 
 	^self allPhxPackages select: [ :p | (self containingRepositoriesOfPackage: p) size > 1 ]
 ]
 
 { #category : #model }
-PhxPackageRepositoryManager2 class >> packagesWithoutRepositories [
+PhxDependencyVisualizer class >> packagesWithoutRepositories [
 
 	^self allPhxPackages select: [ :p | (self containingRepositoriesOfPackage: p) isEmpty ]
 ]
 
 { #category : #'transcript util' }
-PhxPackageRepositoryManager2 class >> reportToTranscript [
+PhxDependencyVisualizer class >> reportToTranscript [
 
 	<script>
 	Transcript clear.
@@ -180,7 +180,7 @@ PhxPackageRepositoryManager2 class >> reportToTranscript [
 ]
 
 { #category : #visualisation }
-PhxPackageRepositoryManager2 class >> textColor [
+PhxDependencyVisualizer class >> textColor [
 
 	^ Color blue
 ]
