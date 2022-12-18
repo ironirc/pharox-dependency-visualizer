@@ -10,7 +10,7 @@ PhxDependencyVisualizer class >> allPhxPackages [
 	| patterns |
 	patterns := { 'phx*'. 'biti'. 'Pharo-home*' . '*ecg*'}.
 	^ (RPackageOrganizer default packages select: [ :p | 
-		  patterns anySatisfy: [ :patt | patt match: p name ] ]) sortedOnPaths: #(name)
+		  patterns anySatisfy: [ :patt | patt match: p name ] ]) sortedAs: #name
 ]
 
 { #category : #model }
