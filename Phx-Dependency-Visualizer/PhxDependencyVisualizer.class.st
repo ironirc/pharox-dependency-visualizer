@@ -73,7 +73,7 @@ PhxDependencyVisualizer class >> graph [
 	self newLineBuilder
 		canvas: canvas;
 		connectToAll: [ :p | self allPhxPackagesDependingOn: p name ].
-	canvas lines pushBack.
+	canvas lines pushBack. 
 	rsLayout := PhxDvHorizontalTreeLayout new.
 	"	rsLayout := RSHorizontalTreeLayout new."
 

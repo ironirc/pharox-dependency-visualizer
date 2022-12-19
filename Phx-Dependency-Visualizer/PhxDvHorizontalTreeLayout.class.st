@@ -50,10 +50,10 @@ PhxDvHorizontalTreeLayout >> doExecute: elements [
 	nodesByLayer add:
 		(rootNodes reject: [ :e | unConnectedNodes includes: e ]).
 	self distributeChildrenInLayers: rootNodes.
-	self nodeCountContainedInLayers inspect.
+	"	self nodeCountContainedInLayers inspect."
 	leftOvers := elements reject: [ :e | 
 		             self isAlreadyInAPreviousLayer: e ].
-	nodesByLayer add: leftOvers.
+	leftOvers ifNotEmpty: [ nodesByLayer add: leftOvers ].
 
 	self layoutLayers
 	"	self
