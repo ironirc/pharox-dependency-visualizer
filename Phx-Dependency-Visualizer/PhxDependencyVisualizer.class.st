@@ -44,6 +44,11 @@ self allPhxRepositoriesWithoutPharoX
 	^self allPhxRepositories reject: [ :each | each name = 'PharoX' ]
 ]
 
+{ #category : #highliting }
+PhxDependencyVisualizer >> browse: evt [
+	evt shape model browse
+]
+
 { #category : #visualisation }
 PhxDependencyVisualizer >> canvas [
 
@@ -102,14 +107,29 @@ PhxDependencyVisualizer >> graph [
 
 { #category : #highliting }
 PhxDependencyVisualizer >> highlight: evt [
-	| box lines boxes |
+
+	| box incomingLines outgoingLines incomingBoxes outgoingBoxes |
 	box := evt shape.
-	lines := box outgoingLines.
-	self highlightLines: lines.
-	boxes := (lines collect: #to) asOrderedCollection.
-	boxes add: box.
-	self highlightBoxes: boxes.
-	evt canvas propertyAt: #highlightedLines put: lines.
+	incomingLines := box incomingLines.
+	outgoingLines := box outgoingLines.
+	self
+		highlightLines: incomingLines
+		withColor: self incomingHighliteColor.
+	self
+		highlightLines: outgoingLines
+		withColor: self outgoingHighliteColor.
+	incomingBoxes := (incomingLines collect: #from) asOrderedCollection.
+	self
+		highlightBoxes: incomingBoxes
+		withColor: self incomingHighliteColor.
+	outgoingBoxes := (outgoingLines collect: #to) asOrderedCollection.
+	self
+		highlightBoxes: outgoingBoxes
+		withColor: self outgoingHighliteColor.
+	self canvas propertyAt: #highlightedBoxes put: incomingBoxes , outgoingBoxes.
+	self canvas
+		propertyAt: #highlightedLines
+		put: incomingLines , outgoingLines
 ]
 
 { #category : #highliting }
@@ -131,36 +151,37 @@ PhxDependencyVisualizer >> highlightAnt: antBorder [
 ]
 
 { #category : #highliting }
-PhxDependencyVisualizer >> highlightBoxes: boxes [
-"	| canvas color |
-	canvas := self canvas.
-	color := self theme testColorPassing.
-	boxes do: [ :box | | shadow |
+PhxDependencyVisualizer >> highlightBoxes: boxes withColor: aColor [
+
+	| canv  |
+	canv := self canvas.
+	boxes do: [ :box | 
+		| shadow |
 		shadow := self shadowFor: box.
-		shadow color: color.
-		box when: RSPositionChangedEvent do: [ :evt | shadow position: evt newPosition ].
+		shadow color: aColor.
+		box
+			when: RSPositionChangedEvent
+			do: [ :evt | shadow position: evt newPosition ].
 		box propertyAt: #shadow put: shadow.
-		canvas addShape: shadow.
+		canv addShape: shadow.
 		shadow pushBack ].
-	canvas propertyAt: #highlightedBoxes put: boxes."
+	
 ]
 
 { #category : #highliting }
-PhxDependencyVisualizer >> highlightLines: lines [
+PhxDependencyVisualizer >> highlightLines: lines withColor: aColor [
 
-	| "canvas" antBorder color |
+	| antBorder |
 	lines ifEmpty: [ ^ self ].
-	"canvas := self container."
 	antBorder := RSBorder new
 		             width: 2;
 		             yourself.
-	color := Color red darker darker.
 	lines do: [ :line | 
 		| border |
 		border := line border.
 		line propertyAt: #oldBorder put: border.
 		line border: antBorder.
-		line color: color ].
+		line color: aColor ].
 	self highlightAnt: antBorder
 ]
 
@@ -170,6 +191,12 @@ PhxDependencyVisualizer >> highlightable [
 		when: RSHighlightEvent send: #highlight: to: self;
 		when: RSUnHighlightEvent send: #unhighlight: to: self;
 		yourself
+]
+
+{ #category : #highliting }
+PhxDependencyVisualizer >> incomingHighliteColor [
+
+	^ Color green darker darker
 ]
 
 { #category : #visualisation }
@@ -219,6 +246,12 @@ PhxDependencyVisualizer >> newShapeFor: model [
 	^ shape
 ]
 
+{ #category : #highliting }
+PhxDependencyVisualizer >> outgoingHighliteColor [
+
+	^ Color red darker darker
+]
+
 { #category : #model }
 PhxDependencyVisualizer >> packagesWithMultipleRepositories [
 
@@ -245,11 +278,38 @@ PhxDependencyVisualizer >> reportToTranscript [
 		Transcript cr ]
 ]
 
+{ #category : #highliting }
+PhxDependencyVisualizer >> shadowFor: box [
+	^ RSBox new
+		position: box position;
+		extent: box extent + 3;
+		cornerRadius: 3;
+		yourself
+]
+
 { #category : #visualisation }
 PhxDependencyVisualizer >> showDepencyAnalyzerWithDoubleClickEvent: anEvent [
 
 	(DAPackageDependenciesPresenter onPackagesNamed:
 		 { anEvent shape model name }) open
+]
+
+{ #category : #highliting }
+PhxDependencyVisualizer >> showMenu: evt [
+
+"	| menu newContext tool class |
+	context ifNil: [ ^ self ].
+	class := evt shape model baselineClass.
+	class ifNil: [ ^ self ].
+	newContext := context copy.
+	tool := ClyFullBrowserMorph on: ClyNavigationEnvironment currentImage.
+	tool prepareInitialStateBy: [ :b | b selectClass: class ].
+
+	newContext tool: tool.
+	menu := CmdContextMenuActivation
+		        buildContextMenuFor: evt canvas morph
+		        inContext: newContext.
+	menu popUpInWorld: self currentWorld"
 ]
 
 { #category : #visualisation }
@@ -269,9 +329,9 @@ PhxDependencyVisualizer >> unhighlight: evt [
 
 { #category : #highliting }
 PhxDependencyVisualizer >> unhighlightBoxes: boxes [
-	"boxes do: [ :box | 
+	boxes do: [ :box | 
 		box propertyAt: #shadow ifPresent: [ :shadow | shadow remove ] ]
-	"
+	
 ]
 
 { #category : #highliting }
