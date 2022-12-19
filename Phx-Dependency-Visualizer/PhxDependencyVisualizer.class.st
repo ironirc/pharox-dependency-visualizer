@@ -57,52 +57,30 @@ PhxDependencyVisualizer class >> dependenciesOf: aPackageName [
 PhxDependencyVisualizer class >> graph [
 
 	<script>
-	| data boxes canvas rslayout |
+	| data boxes canvas rsLayout |
 	data := self allPhxPackages.
-	boxes := data collect: [ :class | self newShapeFor: class ].
+	boxes := data collect: [ :class | 
+		         | sh |
+		         sh := self newShapeFor: class.
+		         sh
+			         when: RSMouseDoubleLeftClick
+			         send: #showDepencyAnalyzerWithDoubleClickEvent:
+			         to: self.
+		         sh ].
+
 	canvas := RSCanvas new.
 	canvas addAll: boxes.
-
 	self newLineBuilder
 		canvas: canvas;
 		connectToAll: [ :p | self allPhxPackagesDependingOn: p name ].
 	canvas lines pushBack.
+	rsLayout := PhxDvHorizontalTreeLayout new.
+	"	rsLayout := RSHorizontalTreeLayout new."
 
-
-	"self allPhxRepositoriesWithoutPharoX do: [ :repo | 
-		RSFlowLayout new
-			gapSize: 2;
-			on: (boxes select: [ :e | 
-						 (self containingRepositoriesOfPackage: e model) anySatisfy: [ 
-								 :r | r = repo ] ]) ]."
-	rslayout := RSRectangleForceLayout new 
-		          nodes: boxes;
-		          edges: canvas lines;
-		          charge: -400;
-		          gravity: 0.8;
-		          strength: 0.2;
-		          alpha: 0.8;
-		          friction: 0.9;
-		          start;
-		          yourself.
-
-	canvas when: RSExtentChangedEvent do: [ :evt | 
-		| camera origin corner |
-		camera := canvas canvas camera.
-		origin := camera fromPixelToSpace: 0 @ 0.
-		corner := camera fromPixelToSpace: canvas canvas extent.
-		rslayout enclosingRectangle: (origin corner: corner) ].
-	"	canvas @ RSSimpleCanvasMonitorInteraction."
-
-	"canvas newAnimation repeat onStepDo: [ :t | layout step ]."
-
-	"	rsLayout := RSHorizontalTreeLayout new.
 	rsLayout
 		horizontalGap: 50;
 		verticalGap: 5.
-	rsLayout on: boxes."
-
-
+	rsLayout on: boxes.
 	canvas @ RSCanvasController.
 	canvas inspect
 ]
@@ -177,6 +155,13 @@ PhxDependencyVisualizer class >> reportToTranscript [
 			eRepo name = 'PharoX' ifFalse: [ 
 				Transcript show: ' [' , eRepo name , ']' ] ].
 		Transcript cr ]
+]
+
+{ #category : #visualisation }
+PhxDependencyVisualizer class >> showDepencyAnalyzerWithDoubleClickEvent: anEvent [
+
+	(DAPackageDependenciesPresenter onPackagesNamed:
+		 { anEvent shape model name }) open
 ]
 
 { #category : #visualisation }
