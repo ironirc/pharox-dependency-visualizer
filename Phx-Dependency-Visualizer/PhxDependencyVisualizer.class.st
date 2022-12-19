@@ -1,11 +1,14 @@
 Class {
 	#name : #PhxDependencyVisualizer,
 	#superclass : #Object,
+	#instVars : [
+		'canvas'
+	],
 	#category : #'Phx-Dependency-Visualizer'
 }
 
 { #category : #model }
-PhxDependencyVisualizer class >> allPhxPackages [
+PhxDependencyVisualizer >> allPhxPackages [
 
 	| patterns |
 	patterns := { 'phx*'. 'biti'. 'Pharo-home*' . '*ecg*'}.
@@ -14,7 +17,7 @@ PhxDependencyVisualizer class >> allPhxPackages [
 ]
 
 { #category : #model }
-PhxDependencyVisualizer class >> allPhxPackagesDependingOn: aPackageName [
+PhxDependencyVisualizer >> allPhxPackagesDependingOn: aPackageName [
 
 	| pNames |
 	pNames := self dependenciesOf: aPackageName.
@@ -22,7 +25,7 @@ PhxDependencyVisualizer class >> allPhxPackagesDependingOn: aPackageName [
 ]
 
 { #category : #model }
-PhxDependencyVisualizer class >> allPhxRepositories [
+PhxDependencyVisualizer >> allPhxRepositories [
 "
 self allPhxRepositories
 "
@@ -34,30 +37,41 @@ self allPhxRepositories
 ]
 
 { #category : #model }
-PhxDependencyVisualizer class >> allPhxRepositoriesWithoutPharoX [
+PhxDependencyVisualizer >> allPhxRepositoriesWithoutPharoX [
 "
 self allPhxRepositoriesWithoutPharoX
 "
 	^self allPhxRepositories reject: [ :each | each name = 'PharoX' ]
 ]
 
+{ #category : #visualisation }
+PhxDependencyVisualizer >> canvas [
+
+	canvas ifNil: [ 
+		canvas := RSCanvas new.
+		canvas addInteraction: (RSCanvasController new
+				 in: [ :i | i configuration useBasicZoom ];
+				 yourself) ].
+	^ canvas
+]
+
 { #category : #model }
-PhxDependencyVisualizer class >> containingRepositoriesOfPackage: aPackage [  
+PhxDependencyVisualizer >> containingRepositoriesOfPackage: aPackage [  
 
 	^IceRepository registry select: [ :p | p includesPackageNamed:  aPackage name ]
 ]
 
 { #category : #model }
-PhxDependencyVisualizer class >> dependenciesOf: aPackageName [
+PhxDependencyVisualizer >> dependenciesOf: aPackageName [
 
 	^ DADependencyChecker new dependenciesOf: aPackageName
 ]
 
 { #category : #visualisation }
-PhxDependencyVisualizer class >> graph [
+PhxDependencyVisualizer >> graph [
 
-	<script>
-	| data boxes canvas rsLayout |
+	<script: 'self new graph'>
+	| data boxes canv rsLayout |
 	data := self allPhxPackages.
 	boxes := data collect: [ :class | 
 		         | sh |
@@ -68,12 +82,12 @@ PhxDependencyVisualizer class >> graph [
 			         to: self.
 		         sh ].
 
-	canvas := RSCanvas new.
-	canvas addAll: boxes.
+	canv := self canvas.
+	canv addAll: boxes.
 	self newLineBuilder
-		canvas: canvas;
+		canvas: canv;
 		connectToAll: [ :p | self allPhxPackagesDependingOn: p name ].
-	canvas lines pushBack. 
+	canv lines pushBack.
 	rsLayout := PhxDvHorizontalTreeLayout new.
 	"	rsLayout := RSHorizontalTreeLayout new."
 
@@ -81,25 +95,96 @@ PhxDependencyVisualizer class >> graph [
 		horizontalGap: 50;
 		verticalGap: 5.
 	rsLayout on: boxes.
-	canvas @ RSCanvasController.
-	canvas inspect
+	canv nodes @ self highlightable.
+	canv "@ RSCanvasController".
+	canv inspect
+]
+
+{ #category : #highliting }
+PhxDependencyVisualizer >> highlight: evt [
+	| box lines boxes |
+	box := evt shape.
+	lines := box outgoingLines.
+	self highlightLines: lines.
+	boxes := (lines collect: #to) asOrderedCollection.
+	boxes add: box.
+	self highlightBoxes: boxes.
+	evt canvas propertyAt: #highlightedLines put: lines.
+]
+
+{ #category : #highliting }
+PhxDependencyVisualizer >> highlightAnt: antBorder [
+
+	| animation canv |
+	canv := self canvas.
+	antBorder dashArray: #( 7 3 ).
+	animation := canv newAnimation
+		             repeat;
+		             from: 0;
+		             to: antBorder dashArray sum negated;
+		             duration: 1 second;
+		             onStepDo: [ :t | 
+			             antBorder dashOffset: t.
+			             canv signalUpdate ].
+
+	canv propertyAt: #ant put: animation
+]
+
+{ #category : #highliting }
+PhxDependencyVisualizer >> highlightBoxes: boxes [
+"	| canvas color |
+	canvas := self canvas.
+	color := self theme testColorPassing.
+	boxes do: [ :box | | shadow |
+		shadow := self shadowFor: box.
+		shadow color: color.
+		box when: RSPositionChangedEvent do: [ :evt | shadow position: evt newPosition ].
+		box propertyAt: #shadow put: shadow.
+		canvas addShape: shadow.
+		shadow pushBack ].
+	canvas propertyAt: #highlightedBoxes put: boxes."
+]
+
+{ #category : #highliting }
+PhxDependencyVisualizer >> highlightLines: lines [
+
+	| "canvas" antBorder color |
+	lines ifEmpty: [ ^ self ].
+	"canvas := self container."
+	antBorder := RSBorder new
+		             width: 2;
+		             yourself.
+	color := Color red darker darker.
+	lines do: [ :line | 
+		| border |
+		border := line border.
+		line propertyAt: #oldBorder put: border.
+		line border: antBorder.
+		line color: color ].
+	self highlightAnt: antBorder
+]
+
+{ #category : #highliting }
+PhxDependencyVisualizer >> highlightable [
+	^ RSHighlightable new
+		when: RSHighlightEvent send: #highlight: to: self;
+		when: RSUnHighlightEvent send: #unhighlight: to: self;
+		yourself
 ]
 
 { #category : #visualisation }
-PhxDependencyVisualizer class >> marker [
+PhxDependencyVisualizer >> marker [
 	|  marker |
-"	theme := self theme."
 	marker := RSShapeFactory arrow.
 	marker color: self textColor.
 	marker size: 10.
 	marker := marker asMarker.
 	marker offset: 0.
-	layout. 
 	^ marker
 ]
 
 { #category : #visualisation }
-PhxDependencyVisualizer class >> newLineBuilder [
+PhxDependencyVisualizer >> newLineBuilder [
 
 	| marker |
 	marker := self marker.
@@ -114,37 +199,40 @@ PhxDependencyVisualizer class >> newLineBuilder [
 ]
 
 { #category : #visualisation }
-PhxDependencyVisualizer class >> newShapeFor: model [
-	| label box |
+PhxDependencyVisualizer >> newShapeFor: model [
+
+	| label box shape |
 	label := RSLabel new
-		text: model name;
-		color: Color black;
-		yourself.
+		         text: model name;
+		         color: Color black;
+		         yourself.
 	box := RSBox new
-		extent: label extent + 10;
-		"border: (self newBorderFor: model);"
-		cornerRadius: 3;
-		yourself.
-	^ ({ box. label } asShapeFor: model) 
-		draggable;
-		yourself.
-		
+		       extent: label extent + 10;
+		       "border: (self newBorderFor: model);"cornerRadius: 3;
+		       yourself.
+	shape := { 
+		         box.
+		         label } asShapeFor: model.
+	shape draggable.
+	shape when: RSMouseDoubleClick send: #browse: to: self.
+	shape when: RSMouseRightClick send: #showMenu: to: self.
+	^ shape
 ]
 
 { #category : #model }
-PhxDependencyVisualizer class >> packagesWithMultipleRepositories [
+PhxDependencyVisualizer >> packagesWithMultipleRepositories [
 
 	^self allPhxPackages select: [ :p | (self containingRepositoriesOfPackage: p) size > 1 ]
 ]
 
 { #category : #model }
-PhxDependencyVisualizer class >> packagesWithoutRepositories [
+PhxDependencyVisualizer >> packagesWithoutRepositories [
 
 	^self allPhxPackages select: [ :p | (self containingRepositoriesOfPackage: p) isEmpty ]
 ]
 
 { #category : #'transcript util' }
-PhxDependencyVisualizer class >> reportToTranscript [
+PhxDependencyVisualizer >> reportToTranscript [
 
 	<script>
 	Transcript clear.
@@ -158,14 +246,39 @@ PhxDependencyVisualizer class >> reportToTranscript [
 ]
 
 { #category : #visualisation }
-PhxDependencyVisualizer class >> showDepencyAnalyzerWithDoubleClickEvent: anEvent [
+PhxDependencyVisualizer >> showDepencyAnalyzerWithDoubleClickEvent: anEvent [
 
 	(DAPackageDependenciesPresenter onPackagesNamed:
 		 { anEvent shape model name }) open
 ]
 
 { #category : #visualisation }
-PhxDependencyVisualizer class >> textColor [
+PhxDependencyVisualizer >> textColor [
 
 	^ Color blue
+]
+
+{ #category : #highliting }
+PhxDependencyVisualizer >> unhighlight: evt [
+	evt canvas 
+		propertyAt: #ant ifPresent: [ :anime | anime stop ];
+		propertyAt: #highlightedLines ifPresent: [ :lines | self unhighlightLines: lines ];
+		propertyAt: #highlightedBoxes ifPresent: [ :boxes | self unhighlightBoxes: boxes ].
+	
+]
+
+{ #category : #highliting }
+PhxDependencyVisualizer >> unhighlightBoxes: boxes [
+	"boxes do: [ :box | 
+		box propertyAt: #shadow ifPresent: [ :shadow | shadow remove ] ]
+	"
+]
+
+{ #category : #highliting }
+PhxDependencyVisualizer >> unhighlightLines: lines [
+	lines do: [ :line | 
+		line border: (line propertyAt: #oldBorder).
+		line color: line border color.
+		line removeKey: #oldBorder ]
+	
 ]
