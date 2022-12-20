@@ -44,7 +44,7 @@ self allPhxRepositoriesWithoutPharoX
 	^self allPhxRepositories reject: [ :each | each name = 'PharoX' ]
 ]
 
-{ #category : #highliting }
+{ #category : #menu }
 PhxDependencyVisualizer >> browse: evt [
 	evt shape model browse
 ]
@@ -81,10 +81,10 @@ PhxDependencyVisualizer >> graph [
 	boxes := data collect: [ :class | 
 		         | sh |
 		         sh := self newShapeFor: class.
-		         sh
+		         "sh
 			         when: RSMouseDoubleLeftClick
 			         send: #showDepencyAnalyzerWithDoubleClickEvent:
-			         to: self.
+			         to: self."
 		         sh ].
 
 	canv := self canvas.
@@ -102,7 +102,7 @@ PhxDependencyVisualizer >> graph [
 	rsLayout on: boxes.
 	canv nodes @ self highlightable.
 	canv "@ RSCanvasController".
-	canv inspect
+	canv open "or use?: canv inspect"
 ]
 
 { #category : #highliting }
@@ -241,7 +241,7 @@ PhxDependencyVisualizer >> newShapeFor: model [
 		         box.
 		         label } asShapeFor: model.
 	shape draggable.
-	shape when: RSMouseDoubleClick send: #browse: to: self.
+"	shape when: RSMouseDoubleClick send: #browse: to: self."
 	shape when: RSMouseRightClick send: #showMenu: to: self.
 	^ shape
 ]
@@ -262,6 +262,12 @@ PhxDependencyVisualizer >> packagesWithMultipleRepositories [
 PhxDependencyVisualizer >> packagesWithoutRepositories [
 
 	^self allPhxPackages select: [ :p | (self containingRepositoriesOfPackage: p) isEmpty ]
+]
+
+{ #category : #menu }
+PhxDependencyVisualizer >> removeWithEvent: event [
+"not OK yet... not used"
+	self canvas removeShape: event shape
 ]
 
 { #category : #'transcript util' }
@@ -287,17 +293,17 @@ PhxDependencyVisualizer >> shadowFor: box [
 		yourself
 ]
 
-{ #category : #visualisation }
+{ #category : #menu }
 PhxDependencyVisualizer >> showDepencyAnalyzerWithDoubleClickEvent: anEvent [
 
 	(DAPackageDependenciesPresenter onPackagesNamed:
 		 { anEvent shape model name }) open
 ]
 
-{ #category : #highliting }
+{ #category : #menu }
 PhxDependencyVisualizer >> showMenu: evt [
 
-"	| menu newContext tool class |
+	"	| menu newContext tool class |
 	context ifNil: [ ^ self ].
 	class := evt shape model baselineClass.
 	class ifNil: [ ^ self ].
@@ -310,16 +316,39 @@ PhxDependencyVisualizer >> showMenu: evt [
 		        buildContextMenuFor: evt canvas morph
 		        inContext: newContext.
 	menu popUpInWorld: self currentWorld"
+
+	| menu |
+	menu := MenuMorph new.
+	"menu buildTitle: [ :menuTitle | menuTitle onlyCloseAndPinable ]."
+	"	menu
+		add: 'remove'
+		target: self
+		selector: #removeWithEvent:
+		argument: evt."
+	menu
+		add: 'browse'
+		target: self
+		selector: #browse:
+		argument: evt.
+	menu addLine.
+	menu
+		add: 'open dependency analyzer'
+		target: self
+		selector: #showDepencyAnalyzerWithDoubleClickEvent:
+		argument: evt.
+
+	^ menu popUpInWorld
 ]
 
 { #category : #visualisation }
 PhxDependencyVisualizer >> textColor [
 
-	^ Color blue
+	^ Color lightGray 
 ]
 
 { #category : #highliting }
 PhxDependencyVisualizer >> unhighlight: evt [
+	evt canvas ifNil: [ ^self ].
 	evt canvas 
 		propertyAt: #ant ifPresent: [ :anime | anime stop ];
 		propertyAt: #highlightedLines ifPresent: [ :lines | self unhighlightLines: lines ];
