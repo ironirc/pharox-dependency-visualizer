@@ -2,7 +2,9 @@ Class {
 	#name : #PhxDependencyVisualizer,
 	#superclass : #Object,
 	#instVars : [
-		'canvas'
+		'canvas',
+		'packageShapeSelection',
+		'packageShapeSelections'
 	],
 	#category : #'Phx-Dependency-Visualizer'
 }
@@ -70,6 +72,14 @@ PhxDependencyVisualizer >> containingRepositoriesOfPackage: aPackage [
 PhxDependencyVisualizer >> dependenciesOf: aPackageName [
 
 	^ DADependencyChecker new dependenciesOf: aPackageName
+]
+
+{ #category : #'package selections' }
+PhxDependencyVisualizer >> deselectPackageShape: sh [
+
+	(self isPackageShapeSelected: sh) ifTrue: [ 
+		self packageShapeSelections remove: sh.
+		self unhighlitePackageShapeAsSelected: sh ]
 ]
 
 { #category : #visualisation }
@@ -193,10 +203,29 @@ PhxDependencyVisualizer >> highlightable [
 		yourself
 ]
 
+{ #category : #'package selections' }
+PhxDependencyVisualizer >> highlitePackageShapeAsSelected: sh [
+	sh color: Color yellow.
+		sh signalUpdate. 
+
+]
+
 { #category : #highliting }
 PhxDependencyVisualizer >> incomingHighliteColor [
 
 	^ Color green darker darker
+]
+
+{ #category : #'package selections' }
+PhxDependencyVisualizer >> isPackageShapeSelected: sh [
+
+	^self packageShapeSelections includes: sh
+]
+
+{ #category : #menu }
+PhxDependencyVisualizer >> leftClick: evt [
+
+	evt shape ifNotNil: [:sh | (sh model isKindOf: RPackage) ifTrue: [ self shapeClicked: sh ] ]
 ]
 
 { #category : #visualisation }
@@ -243,6 +272,7 @@ PhxDependencyVisualizer >> newShapeFor: model [
 	shape draggable.
 "	shape when: RSMouseDoubleClick send: #browse: to: self."
 	shape when: RSMouseRightClick send: #showMenu: to: self.
+	shape when: RSMouseLeftClick send: #leftClick: to: self.
 	^ shape
 ]
 
@@ -250,6 +280,14 @@ PhxDependencyVisualizer >> newShapeFor: model [
 PhxDependencyVisualizer >> outgoingHighliteColor [
 
 	^ Color red darker darker
+]
+
+{ #category : #'package selections' }
+PhxDependencyVisualizer >> packageShapeSelections [
+
+	packageShapeSelection ifNil: [ 
+		packageShapeSelections := OrderedCollection new ].
+	^ packageShapeSelections
 ]
 
 { #category : #model }
@@ -284,6 +322,14 @@ PhxDependencyVisualizer >> reportToTranscript [
 		Transcript cr ]
 ]
 
+{ #category : #'package selections' }
+PhxDependencyVisualizer >> selectPackageShape: sh [
+
+	(self isPackageShapeSelected: sh) ifFalse: [ 
+		self packageShapeSelections add: sh.
+		self highlitePackageShapeAsSelected: sh ]
+]
+
 { #category : #highliting }
 PhxDependencyVisualizer >> shadowFor: box [
 	^ RSBox new
@@ -291,6 +337,12 @@ PhxDependencyVisualizer >> shadowFor: box [
 		extent: box extent + 3;
 		cornerRadius: 3;
 		yourself
+]
+
+{ #category : #'package selections' }
+PhxDependencyVisualizer >> shapeClicked: sh [
+
+	self toggleSelectionForPackageShape: sh
 ]
 
 { #category : #menu }
@@ -346,6 +398,14 @@ PhxDependencyVisualizer >> textColor [
 	^ Color lightGray 
 ]
 
+{ #category : #'package selections' }
+PhxDependencyVisualizer >> toggleSelectionForPackageShape: sh [
+
+	(self isPackageShapeSelected: sh)
+		ifTrue: [ self deselectPackageShape: sh ]
+		ifFalse: [ self selectPackageShape: sh ]
+]
+
 { #category : #highliting }
 PhxDependencyVisualizer >> unhighlight: evt [
 	evt canvas ifNil: [ ^self ].
@@ -370,4 +430,11 @@ PhxDependencyVisualizer >> unhighlightLines: lines [
 		line color: line border color.
 		line removeKey: #oldBorder ]
 	
+]
+
+{ #category : #'package selections' }
+PhxDependencyVisualizer >> unhighlitePackageShapeAsSelected: sh [
+
+	sh color: Color lightGray.
+	sh signalUpdate. 
 ]
