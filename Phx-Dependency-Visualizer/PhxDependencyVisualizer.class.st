@@ -61,6 +61,7 @@ PhxDependencyVisualizer >> antAnimations [
 
 { #category : #menu }
 PhxDependencyVisualizer >> browse: evt [
+	self stopAndRemoveAllAnimations.
 	evt shape model browse
 ]
 
@@ -364,7 +365,7 @@ PhxDependencyVisualizer >> shapeClicked: sh [
 
 { #category : #menu }
 PhxDependencyVisualizer >> showDepencyAnalyzerWithDoubleClickEvent: anEvent [
-
+	self stopAndRemoveAllAnimations.
 	(DAPackageDependenciesPresenter onPackagesNamed:
 		 { anEvent shape model name }) open
 ]
@@ -409,6 +410,13 @@ PhxDependencyVisualizer >> showMenu: evt [
 	^ menu popUpInWorld
 ]
 
+{ #category : #highliting }
+PhxDependencyVisualizer >> stopAndRemoveAllAnimations [
+
+	self antAnimations do: [ :anim | anim stop ].
+	self antAnimations removeAll
+]
+
 { #category : #visualisation }
 PhxDependencyVisualizer >> textColor [
 
@@ -425,13 +433,13 @@ PhxDependencyVisualizer >> toggleSelectionForPackageShape: sh [
 
 { #category : #highliting }
 PhxDependencyVisualizer >> unhighlight: evt [
-	evt canvas ifNil: [ ^self ].
- 	self antAnimations do: [:anim | anim stop   ].
-	self antAnimations removeAll. 
-	evt canvas 
-		propertyAt: #highlightedLines ifPresent: [ :lines | self unhighlightLines: lines ];
-		propertyAt: #highlightedBoxes ifPresent: [ :boxes | self unhighlightBoxes: boxes ].
-	
+
+	self stopAndRemoveAllAnimations.
+	evt canvas
+		propertyAt: #highlightedLines
+		ifPresent: [ :lines | self unhighlightLines: lines ];
+		propertyAt: #highlightedBoxes
+		ifPresent: [ :boxes | self unhighlightBoxes: boxes ]
 ]
 
 { #category : #highliting }
