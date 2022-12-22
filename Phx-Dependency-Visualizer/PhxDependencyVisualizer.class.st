@@ -54,6 +54,11 @@ self allPhxRepositoriesWithoutPharoX
 	^self allPhxRepositories reject: [ :each | each name = 'PharoX' ]
 ]
 
+{ #category : #highliting }
+PhxDependencyVisualizer >> antAnimations [
+	^self canvas propertyAt: #antAnimations ifAbsentPut: [ OrderedCollection new ]
+]
+
 { #category : #menu }
 PhxDependencyVisualizer >> browse: evt [
 	evt shape model browse
@@ -156,7 +161,7 @@ PhxDependencyVisualizer >> highlightAnt: antBorder [
 			             antBorder dashOffset: t.
 			             canv signalUpdate ].
 
-	canv propertyAt: #ant put: animation
+	self antAnimations add: animation
 ]
 
 { #category : #highliting }
@@ -206,7 +211,6 @@ PhxDependencyVisualizer >> highlightable [
 PhxDependencyVisualizer >> highlitePackageShapeAsSelected: sh [
 
 	sh shapes first color: Color yellow.
-	sh signalUpdate
 ]
 
 { #category : #highliting }
@@ -422,8 +426,9 @@ PhxDependencyVisualizer >> toggleSelectionForPackageShape: sh [
 { #category : #highliting }
 PhxDependencyVisualizer >> unhighlight: evt [
 	evt canvas ifNil: [ ^self ].
+ 	self antAnimations do: [:anim | anim stop   ].
+	self antAnimations removeAll. 
 	evt canvas 
-		propertyAt: #ant ifPresent: [ :anime | anime stop ];
 		propertyAt: #highlightedLines ifPresent: [ :lines | self unhighlightLines: lines ];
 		propertyAt: #highlightedBoxes ifPresent: [ :boxes | self unhighlightBoxes: boxes ].
 	
@@ -438,16 +443,16 @@ PhxDependencyVisualizer >> unhighlightBoxes: boxes [
 
 { #category : #highliting }
 PhxDependencyVisualizer >> unhighlightLines: lines [
+
 	lines do: [ :line | 
+
 		line border: (line propertyAt: #oldBorder).
 		line color: line border color.
 		line removeKey: #oldBorder ]
-	
 ]
 
 { #category : #'package selections' }
 PhxDependencyVisualizer >> unhighlitePackageShapeAsSelected: sh [
 
 	sh shapes first  color: Color lightGray.
-	sh   signalUpdate. 
 ]
