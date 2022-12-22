@@ -3,14 +3,17 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'canvas',
-		'packageShapeSelections'
+		'packageShapeSelections',
+		'packageRelationGraph'
 	],
 	#category : #'Phx-Dependency-Visualizer'
 }
 
 { #category : #model }
-PhxDependencyVisualizer >> allPhxPackages [
-
+PhxDependencyVisualizer class >> allPhxPackages [
+"
+PhxDependencyVisualizer allPhxPackages
+"
 	| patterns |
 	patterns := { 'phx*'. 'biti'. 'Pharo-home*' . '*ecg*'}.
 	^ (RPackageOrganizer default packages select: [ :p | 
@@ -18,10 +21,16 @@ PhxDependencyVisualizer >> allPhxPackages [
 ]
 
 { #category : #model }
+PhxDependencyVisualizer >> allPhxPackages [
+
+	^self class allPhxPackages
+]
+
+{ #category : #model }
 PhxDependencyVisualizer >> allPhxPackagesDependingOn: aPackageName [
 
 	| pNames |
-	pNames := self dependenciesOf: aPackageName.
+	pNames := self dependentPackageNamesOfPackageNamed: aPackageName.
 	^ self allPhxPackages select: [ :e | pNames includes: e name ]
 ]
 
@@ -68,9 +77,10 @@ PhxDependencyVisualizer >> containingRepositoriesOfPackage: aPackage [
 ]
 
 { #category : #model }
-PhxDependencyVisualizer >> dependenciesOf: aPackageName [
+PhxDependencyVisualizer >> dependentPackageNamesOfPackageNamed: aPackageName [
 
-	^ DADependencyChecker new dependenciesOf: aPackageName
+	^ (self packageRelationGraph packageAt: aPackageName)
+		  dependentPackages collect: [ :e | e packageName ]
 ]
 
 { #category : #'package selections' }
@@ -87,15 +97,7 @@ PhxDependencyVisualizer >> graph [
 	<script: 'self new graph'>
 	| data boxes canv rsLayout |
 	data := self allPhxPackages.
-	boxes := data collect: [ :class | 
-		         | sh |
-		         sh := self newShapeFor: class.
-		         "sh
-			         when: RSMouseDoubleLeftClick
-			         send: #showDepencyAnalyzerWithDoubleClickEvent:
-			         to: self."
-		         sh ].
-
+	boxes := data collect: [ :class | self newShapeFor: class ].
 	canv := self canvas.
 	canv addAll: boxes.
 	self newLineBuilder
@@ -103,14 +105,12 @@ PhxDependencyVisualizer >> graph [
 		connectToAll: [ :p | self allPhxPackagesDependingOn: p name ].
 	canv lines pushBack.
 	rsLayout := PhxDvHorizontalTreeLayout new.
-	"	rsLayout := RSHorizontalTreeLayout new."
-
 	rsLayout
 		horizontalGap: 50;
 		verticalGap: 5.
 	rsLayout on: boxes.
 	canv nodes @ self highlightable.
-	canv "@ RSCanvasController".
+	canv. "@ RSCanvasController"
 	canv open "or use?: canv inspect"
 ]
 
@@ -279,6 +279,20 @@ PhxDependencyVisualizer >> newShapeFor: model [
 PhxDependencyVisualizer >> outgoingHighliteColor [
 
 	^ Color red darker darker
+]
+
+{ #category : #model }
+PhxDependencyVisualizer >> packageRelationGraph [
+
+	packageRelationGraph ifNil: [ 
+		| g |
+		g := DAPackageRelationGraph onPackagesNamed:
+			     (self allPhxPackages collect: [ :e | e name ]).
+		g computeStaticDependencies.
+		g removeInternalDependencies.
+		g combineDependencies.
+		packageRelationGraph := g ].
+	^ packageRelationGraph
 ]
 
 { #category : #'package selections' }
