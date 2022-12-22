@@ -3,7 +3,6 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'canvas',
-		'packageShapeSelection',
 		'packageShapeSelections'
 	],
 	#category : #'Phx-Dependency-Visualizer'
@@ -205,9 +204,9 @@ PhxDependencyVisualizer >> highlightable [
 
 { #category : #'package selections' }
 PhxDependencyVisualizer >> highlitePackageShapeAsSelected: sh [
-	sh color: Color yellow.
-		sh signalUpdate. 
 
+	sh shapes first color: Color yellow.
+	sh signalUpdate
 ]
 
 { #category : #highliting }
@@ -285,7 +284,7 @@ PhxDependencyVisualizer >> outgoingHighliteColor [
 { #category : #'package selections' }
 PhxDependencyVisualizer >> packageShapeSelections [
 
-	packageShapeSelection ifNil: [ 
+	packageShapeSelections ifNil: [ 
 		packageShapeSelections := OrderedCollection new ].
 	^ packageShapeSelections
 ]
@@ -435,6 +434,6 @@ PhxDependencyVisualizer >> unhighlightLines: lines [
 { #category : #'package selections' }
 PhxDependencyVisualizer >> unhighlitePackageShapeAsSelected: sh [
 
-	sh color: Color lightGray.
-	sh signalUpdate. 
+	sh shapes first  color: Color lightGray.
+	sh   signalUpdate. 
 ]
