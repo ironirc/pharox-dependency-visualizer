@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'layers'
 	],
-	#category : #'Phx-Dependency-Visualizer'
+	#category : #'Phx-Dependency-Visualizer-viz gen1'
 }
 
 { #category : #'private - hook' }
