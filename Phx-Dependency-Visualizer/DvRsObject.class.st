@@ -1,18 +1,18 @@
 Class {
-	#name : #DvRoObject,
-	#superclass : #RoassalModelShapesAdaptor,
+	#name : #DvRsObject,
+	#superclass : #DvRsModelShapesAdaptor,
 	#category : #'Phx-Dependency-Visualizer-visualisation gen2'
 }
 
 { #category : #'announcement handling' }
-DvRoObject >> handleAnnouncementAspectChanged: a [
+DvRsObject >> handleAnnouncementAspectChanged: a [
 	self subclassResponsibility
 ]
 
 { #category : #'setUp-tearDown' }
-DvRoObject >> setupListenersToModel [
+DvRsObject >> setupListenersToModel [
 	model announcer
-		when: BT8AnnouncementAspectChanged
+		when: DvAnnouncementAspectChanged 
 		do: [ :a | self handleAnnouncementAspectChanged: a ]
 		for: self
 ]

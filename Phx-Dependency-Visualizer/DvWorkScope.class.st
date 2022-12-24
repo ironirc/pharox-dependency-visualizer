@@ -36,7 +36,6 @@ self example1
 DvWorkScope >> addPackage: aPackage [ 
 
 	self packages add: aPackage.
-	aPackage scope: self.
 	self changed: #packages
 ]
 
@@ -44,7 +43,6 @@ DvWorkScope >> addPackage: aPackage [
 DvWorkScope >> addPackageGroup: aPackageGroup [
 
 	self packageGroups add: aPackageGroup.
-	aPackageGroup scope: self.
 	self changed: #packageGroups
 ]
 
@@ -53,7 +51,7 @@ DvWorkScope >> addPackageGroupNamed: aName [
 
 	| p |
 	p := DvPackageGroup newNamed: aName.
-	self addPackageGroup: p.
+	p scope: self
 ]
 
 { #category : #adding }
@@ -61,7 +59,7 @@ DvWorkScope >> addPackageNamed: aName [
 
 	| p |
 	p := DvPackage newNamed: aName.
-	self addPackage: p.
+	p scope: self
 ]
 
 { #category : #accessing }
@@ -82,7 +80,7 @@ DvWorkScope >> allPhxPackagesDependingOn: aPackageName [
 { #category : #roassal }
 DvWorkScope >> asRoassalVisualization [
 
-	^ DvRoWorkScope new model: self
+	^ DvRsWorkScope new model: self
 ]
 
 { #category : #adding }

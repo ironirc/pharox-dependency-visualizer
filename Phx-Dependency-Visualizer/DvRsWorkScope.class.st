@@ -1,98 +1,109 @@
 Class {
-	#name : #DvRoWorkScope,
-	#superclass : #DvRoObject,
+	#name : #DvRsWorkScope,
+	#superclass : #DvRsObject,
 	#traits : 'DvInAndOutHighlitable',
 	#classTraits : 'DvInAndOutHighlitable classTrait',
 	#instVars : [
 		'rsCanvas',
-		'packages',
-		'packageGroups'
+		'rsPackages',
+		'rsPackageGroups'
 	],
 	#category : #'Phx-Dependency-Visualizer-visualisation gen2'
 }
 
 { #category : #examples }
-DvRoWorkScope class >> example1 [
+DvRsWorkScope class >> example1 [
 
-	DvWorkScope example1 asRoassalVisualization build canvas open
+	| vis |
+	vis := DvWorkScope example1 asRoassalVisualization. 
+	vis build canvas open.
+	vis inspect.
 ]
 
 { #category : #build }
-DvRoWorkScope >> addAllPackageGroups [
+DvRsWorkScope >> addAllRsPackageGroups [
 
 	self model packageGroups do: [ :pg | self addPackageGroup: pg ]
 ]
 
 { #category : #build }
-DvRoWorkScope >> addAllPackages [
+DvRsWorkScope >> addAllRsPackages [
 
 	self model packages do: [:p |  self addPackage: p ]
 ]
 
 { #category : #build }
-DvRoWorkScope >> addPackage: aPackage [
-	| vPackage |
-	vPackage := DvRoPackage  newWithModel: aPackage under: self.
-	vPackage build.
-	
-	self rsCanvas zoomToFit.
-	^vPackage
+DvRsWorkScope >> addPackage: aPackage [
+
+	| rsPackage |
+	rsPackage := DvRsPackage newWithModel: aPackage under: self.
+	rsPackage build.
+	^ rsPackage
 ]
 
 { #category : #build }
-DvRoWorkScope >> addPackageGroup: aPackageGroup [
+DvRsWorkScope >> addPackageGroup: aPackageGroup [
 
-	| pg |
-	pg := DvRoPackageGroup newWithModel: aPackageGroup under: self.
-	pg build
+	| rsPackageGroup |
+	rsPackageGroup := DvRsPackageGroup
+		                  newWithModel: aPackageGroup
+		                  under: self.
+	rsPackageGroup build
+]
+
+{ #category : #build }
+DvRsWorkScope >> addRsPackageGroup: anObject [
+
+	self model packageGroups add: anObject.
+	
 ]
 
 { #category : #private }
-DvRoWorkScope >> addToManyRelationOnParent [
+DvRsWorkScope >> addToManyRelationOnParent [
 	"no parent, no need"
 ]
 
 { #category : #build }
-DvRoWorkScope >> applyLayoutHierarchical [
+DvRsWorkScope >> applyLayoutHierarchical [
 
 	| rsLayout |
 	rsLayout := DvHorizontalTreeLayout new.
 	rsLayout
 		horizontalGap: 50;
 		verticalGap: 5.
-	rsLayout on: (self packages collect: [ :p | p mainShape ])
+	rsLayout on: (self rsPackages collect: [ :p | p mainShape ])
 ]
 
 { #category : #build }
-DvRoWorkScope >> build [
+DvRsWorkScope >> build [
 
-	self addAllPackages.
-	self addAllPackageGroups.
-
-
-		self connectAllPackages.
+	self addAllRsPackages.
+	self addAllRsPackageGroups.
+	self connectAllPackages.
 	self applyLayoutHierarchical.
 	self canvas nodes @ self highlightable
 ]
 
 { #category : #build }
-DvRoWorkScope >> connectAllPackages [
+DvRsWorkScope >> connectAllPackages [
 
+	| packageShapes |
+	packageShapes := self rsPackages collect: #mainShape.
 	self newLineBuilder
-		fromShapes: (self packages collect: #mainShape);
-		toShapes: (self packages collect: #mainShape);
+		fromShapes: packageShapes;
+		toShapes: packageShapes;
 		canvas: self canvas;
 		connectToAll: [ :each | each packagesYouDependOn ]
 ]
 
 { #category : #'initialize-release' }
-DvRoWorkScope >> initialize [
+DvRsWorkScope >> initialize [
 	super initialize.
 
 ]
 
 { #category : #build }
-DvRoWorkScope >> marker [
+DvRsWorkScope >> marker [
 	|  marker |
 	marker := RSShapeFactory arrow.
 	marker color: self textColor.
@@ -103,7 +114,7 @@ DvRoWorkScope >> marker [
 ]
 
 { #category : #build }
-DvRoWorkScope >> newLineBuilder [
+DvRsWorkScope >> newLineBuilder [
 
 	| marker |
 	marker := self marker.
@@ -117,27 +128,13 @@ DvRoWorkScope >> newLineBuilder [
 		  yourself
 ]
 
-{ #category : #accessing }
-DvRoWorkScope >> packageGroups [
-
-	packageGroups ifNil: [ packageGroups := OrderedCollection new ].
-	^ packageGroups
-]
-
-{ #category : #accessing }
-DvRoWorkScope >> packages [
-
-	packages ifNil: [ packages := OrderedCollection new ].
-	^ packages
-]
-
 { #category : #private }
-DvRoWorkScope >> removeFromManyRelationOnParent [
+DvRsWorkScope >> removeFromManyRelationOnParent [
 	"no parent, no need"
 ]
 
 { #category : #accessing }
-DvRoWorkScope >> rsCanvas [
+DvRsWorkScope >> rsCanvas [
 
 	rsCanvas ifNil: [ 
 		rsCanvas := RSCanvas new.
@@ -147,14 +144,28 @@ DvRoWorkScope >> rsCanvas [
 	^ rsCanvas
 ]
 
+{ #category : #accessing }
+DvRsWorkScope >> rsPackageGroups [
+
+	rsPackageGroups ifNil: [ rsPackageGroups := OrderedCollection new ].
+	^ rsPackageGroups
+]
+
+{ #category : #accessing }
+DvRsWorkScope >> rsPackages [
+
+	rsPackages ifNil: [ rsPackages := OrderedCollection new ].
+	^ rsPackages
+]
+
 { #category : #'setUp-tearDown' }
-DvRoWorkScope >> setupListenersToModel [
+DvRsWorkScope >> setupListenersToModel [
 	super setupListenersToModel.
 
 ]
 
 { #category : #build }
-DvRoWorkScope >> textColor [
+DvRsWorkScope >> textColor [
 
 	^ Color lightGray 
 ]

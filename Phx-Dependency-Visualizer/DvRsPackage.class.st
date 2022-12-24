@@ -1,16 +1,16 @@
 Class {
-	#name : #DvRoPackage,
-	#superclass : #DvRoObject,
+	#name : #DvRsPackage,
+	#superclass : #DvRsObject,
 	#category : #'Phx-Dependency-Visualizer-visualisation gen2'
 }
 
 { #category : #private }
-DvRoPackage >> addToManyRelationOnParent [
-	self parent packages add: self
+DvRsPackage >> addToManyRelationOnParent [
+	self parent rsPackages add: self
 ]
 
 { #category : #building }
-DvRoPackage >> build [
+DvRsPackage >> build [
 
 	| compos label box |
 	self mainShape ifNotNil: [ 
@@ -18,6 +18,7 @@ DvRoPackage >> build [
 	label := RSLabel new
 		         text: model name;
 		         color: Color black;
+					model: #name;
 		         yourself.
 	box := RSBox new
 		       extent: label extent + 10;
@@ -35,38 +36,38 @@ DvRoPackage >> build [
 ]
 
 { #category : #'announcement handling' }
-DvRoPackage >> handleAnnouncementAspectChanged: a [
-	| ns |
-	ns := self mainShape.
-	ns ifNil: [ ^ self ].
-	a aspect == #shortCode
+DvRsPackage >> handleAnnouncementAspectChanged: a [
+	| sh |
+	sh := self mainShape.
+	sh ifNil: [ ^ self ].
+	a aspect == #name
 		ifTrue: [ | labelShape |
-			labelShape := ns shapeFromModel: a aspect.
-			labelShape text: a model shortCode ]
+			labelShape := sh shapeFromModel: a aspect.
+			labelShape text: a model name ]
 ]
 
 { #category : #menu }
-DvRoPackage >> handleBrowseEvent: evt [
+DvRsPackage >> handleBrowseEvent: evt [
 	self top stopAndRemoveAllAnimations.
 	(RPackageOrganizer default packageNamed: self model name) browse
 
 ]
 
 { #category : #menu }
-DvRoPackage >> handleShowDependencyAnalyserEvent: anEvent [
+DvRsPackage >> handleShowDependencyAnalyserEvent: anEvent [
 	self top stopAndRemoveAllAnimations.
 	(DAPackageDependenciesPresenter onPackagesNamed:
 		 { self model name }) open
 ]
 
 { #category : #'initialize-release' }
-DvRoPackage >> initialize [
+DvRsPackage >> initialize [
 	super initialize.
 
 ]
 
 { #category : #printing }
-DvRoPackage >> printOn: ws [
+DvRsPackage >> printOn: ws [
 
 	super printOn: ws.
 	ws << ' ('.
@@ -75,18 +76,18 @@ DvRoPackage >> printOn: ws [
 ]
 
 { #category : #private }
-DvRoPackage >> removeFromManyRelationOnParent [
-	self parent packages remove: self
+DvRsPackage >> removeFromManyRelationOnParent [
+	self parent rsPackages remove: self
 ]
 
 { #category : #'setUp-tearDown' }
-DvRoPackage >> setupListenersToModel [
+DvRsPackage >> setupListenersToModel [
 	super setupListenersToModel.
 
 ]
 
 { #category : #menu }
-DvRoPackage >> showMenu: evt [
+DvRsPackage >> showMenu: evt [
 
 	| menu |
 	menu := MenuMorph new.
@@ -105,7 +106,7 @@ DvRoPackage >> showMenu: evt [
 ]
 
 { #category : #'setUp-tearDown' }
-DvRoPackage >> tearDown [
+DvRsPackage >> tearDown [
 	self mainShape ifNotNil: [ :ms | self canvas removeShape: ms ].
 	self parent: nil.
 	self model: nil

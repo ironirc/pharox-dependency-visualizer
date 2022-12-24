@@ -4,6 +4,12 @@ Class {
 	#category : #'Phx-Dependency-Visualizer-model'
 }
 
+{ #category : #'many relations' }
+DvPackage >> addMeToScope: aScope [  
+
+	aScope addPackage: self
+]
+
 { #category : #printing }
 DvPackage >> computePackagesDependingOnYou [
 
@@ -28,4 +34,10 @@ DvPackage >> packagesDependingOnYou [
 DvPackage >> packagesYouDependOn [
 
 	^ self computePackagesYouDependOn
+]
+
+{ #category : #'many relations' }
+DvPackage >> removeMeFromScope: aScope [  
+
+	aScope removePackage: self
 ]

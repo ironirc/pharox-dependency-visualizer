@@ -1,16 +1,17 @@
 Class {
-	#name : #DvRoPackageGroup,
-	#superclass : #DvRoObject,
+	#name : #DvRsPackageGroup,
+	#superclass : #DvRsObject,
 	#category : #'Phx-Dependency-Visualizer-visualisation gen2'
 }
 
 { #category : #private }
-DvRoPackageGroup >> addToManyRelationOnParent [
-	self parent packageGroups add: self
+DvRsPackageGroup >> addToManyRelationOnParent [
+
+	self parent rsPackageGroups add: self
 ]
 
 { #category : #building }
-DvRoPackageGroup >> adjustBox: box on: someShapes [
+DvRsPackageGroup >> adjustBox: box on: someShapes [
 
 	| rect |
 	rect := someShapes encompassingRectangle.
@@ -20,7 +21,7 @@ DvRoPackageGroup >> adjustBox: box on: someShapes [
 ]
 
 { #category : #building }
-DvRoPackageGroup >> build [
+DvRsPackageGroup >> build [
 
 	| pckgs compos label border box |
 	self mainShape ifNotNil: [ 
@@ -52,32 +53,32 @@ DvRoPackageGroup >> build [
 ]
 
 { #category : #building }
-DvRoPackageGroup >> containedPackageShapes [
+DvRsPackageGroup >> containedPackageShapes [
 
 	^ self containedPackages collect: #mainShape
 ]
 
 { #category : #building }
-DvRoPackageGroup >> containedPackages [
+DvRsPackageGroup >> containedPackages [
 
 	^ self model packages collect: [ :eachModelPckg | 
-		  self parent packages detect: [ :eachVisPckg | 
+		  self parent rsPackages detect: [ :eachVisPckg | 
 			  eachVisPckg model = eachModelPckg ] ]
 ]
 
 { #category : #'announcement handling' }
-DvRoPackageGroup >> handleAnnouncementAspectChanged: a [
+DvRsPackageGroup >> handleAnnouncementAspectChanged: a [
 	
 ]
 
 { #category : #'initialize-release' }
-DvRoPackageGroup >> initialize [
+DvRsPackageGroup >> initialize [
 	super initialize.
 
 ]
 
 { #category : #printing }
-DvRoPackageGroup >> printOn: ws [
+DvRsPackageGroup >> printOn: ws [
 
 	super printOn: ws.
 	ws << ' ('.
@@ -86,18 +87,18 @@ DvRoPackageGroup >> printOn: ws [
 ]
 
 { #category : #private }
-DvRoPackageGroup >> removeFromManyRelationOnParent [
-	self parent packageGroups remove: self
+DvRsPackageGroup >> removeFromManyRelationOnParent [
+	self parent rsPackageGroups remove: self
 ]
 
 { #category : #'setUp-tearDown' }
-DvRoPackageGroup >> setupListenersToModel [
+DvRsPackageGroup >> setupListenersToModel [
 	super setupListenersToModel.
 
 ]
 
 { #category : #'setUp-tearDown' }
-DvRoPackageGroup >> tearDown [
+DvRsPackageGroup >> tearDown [
 	self mainShape ifNotNil: [ :ms | self canvas removeShape: ms ].
 	self parent: nil.
 	self model: nil

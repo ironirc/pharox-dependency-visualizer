@@ -1,6 +1,6 @@
 Class {
 	#name : #DvAnnouncementAspectChanged,
-	#superclass : #DvAnnouncement,
+	#superclass : #DvAnnouncementOnModel,
 	#instVars : [
 		'aspect'
 	],
