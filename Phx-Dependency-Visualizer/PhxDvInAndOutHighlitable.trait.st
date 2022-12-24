@@ -111,7 +111,7 @@ PhxDvInAndOutHighlitable >> outgoingHighliteColor [
 { #category : #highliting }
 PhxDvInAndOutHighlitable >> shadowFor: box [
 	^ RSBox new
-		position: box position;
+		position: box positionInCanvas;
 		extent: box extent + 3;
 		cornerRadius: 3;
 		yourself
