@@ -45,6 +45,20 @@ DvRoPackage >> handleAnnouncementAspectChanged: a [
 			labelShape text: a model shortCode ]
 ]
 
+{ #category : #menu }
+DvRoPackage >> handleBrowseEvent: evt [
+	self top stopAndRemoveAllAnimations.
+	(RPackageOrganizer default packageNamed: self model name) browse
+
+]
+
+{ #category : #menu }
+DvRoPackage >> handleShowDependencyAnalyserEvent: anEvent [
+	self top stopAndRemoveAllAnimations.
+	(DAPackageDependenciesPresenter onPackagesNamed:
+		 { self model name }) open
+]
+
 { #category : #'initialize-release' }
 DvRoPackage >> initialize [
 	super initialize.
@@ -69,6 +83,25 @@ DvRoPackage >> removeFromManyRelationOnParent [
 DvRoPackage >> setupListenersToModel [
 	super setupListenersToModel.
 
+]
+
+{ #category : #menu }
+DvRoPackage >> showMenu: evt [
+
+	| menu |
+	menu := MenuMorph new.
+	menu
+		add: 'browse'
+		target: self
+		selector: #handleBrowseEvent:
+		argument: evt.
+	menu addLine.
+	menu
+		add: 'open dependency analyzer'
+		target: self
+		selector: #handleShowDependencyAnalyserEvent:
+		argument: evt.
+	^ menu popUpInWorld
 ]
 
 { #category : #'setUp-tearDown' }

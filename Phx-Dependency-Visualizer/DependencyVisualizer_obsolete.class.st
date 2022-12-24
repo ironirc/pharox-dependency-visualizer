@@ -117,6 +117,13 @@ DependencyVisualizer_obsolete >> graph [
 	canv open "or use?: canv inspect"
 ]
 
+{ #category : #menu }
+DependencyVisualizer_obsolete >> handleShowDependencyAnalyserEvent: anEvent [
+	self stopAndRemoveAllAnimations.
+	(DAPackageDependenciesPresenter onPackagesNamed:
+		 { anEvent shape model name }) open
+]
+
 { #category : #'package selections' }
 DependencyVisualizer_obsolete >> highlitePackageShapeAsSelected: sh [
 
@@ -252,13 +259,6 @@ DependencyVisualizer_obsolete >> shapeClicked: sh [
 ]
 
 { #category : #menu }
-DependencyVisualizer_obsolete >> showDepencyAnalyzerWithDoubleClickEvent: anEvent [
-	self stopAndRemoveAllAnimations.
-	(DAPackageDependenciesPresenter onPackagesNamed:
-		 { anEvent shape model name }) open
-]
-
-{ #category : #menu }
 DependencyVisualizer_obsolete >> showMenu: evt [
 
 	"	| menu newContext tool class |
@@ -292,7 +292,7 @@ DependencyVisualizer_obsolete >> showMenu: evt [
 	menu
 		add: 'open dependency analyzer'
 		target: self
-		selector: #showDepencyAnalyzerWithDoubleClickEvent:
+		selector: #handleShowDependencyAnalyserEvent:
 		argument: evt.
 
 	^ menu popUpInWorld
