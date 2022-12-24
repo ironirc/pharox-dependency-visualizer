@@ -1,32 +1,38 @@
 Class {
-	#name : #PhxDvVisWorkScope,
-	#superclass : #PhxDvRoObject,
-	#traits : 'PhxDvInAndOutHighlitable',
-	#classTraits : 'PhxDvInAndOutHighlitable classTrait',
+	#name : #DvRoWorkScope,
+	#superclass : #DvRoObject,
+	#traits : 'DvInAndOutHighlitable',
+	#classTraits : 'DvInAndOutHighlitable classTrait',
 	#instVars : [
 		'rsCanvas',
 		'packages',
 		'packageGroups'
 	],
-	#category : #'Phx-Dependency-Visualizer-viz gen2'
+	#category : #'Phx-Dependency-Visualizer-visualisation gen2'
 }
 
+{ #category : #examples }
+DvRoWorkScope class >> example1 [
+
+	DvWorkScope example1 asRoassalVisualization build canvas open
+]
+
 { #category : #build }
-PhxDvVisWorkScope >> addAllPackageGroups [
+DvRoWorkScope >> addAllPackageGroups [
 
 	self model packageGroups do: [ :pg | self addPackageGroup: pg ]
 ]
 
 { #category : #build }
-PhxDvVisWorkScope >> addAllPackages [
+DvRoWorkScope >> addAllPackages [
 
 	self model packages do: [:p |  self addPackage: p ]
 ]
 
 { #category : #build }
-PhxDvVisWorkScope >> addPackage: aPackage [
+DvRoWorkScope >> addPackage: aPackage [
 	| vPackage |
-	vPackage := PhxDvVisPackage  newWithModel: aPackage under: self.
+	vPackage := DvRoPackage  newWithModel: aPackage under: self.
 	vPackage build.
 	
 	self rsCanvas zoomToFit.
@@ -34,23 +40,23 @@ PhxDvVisWorkScope >> addPackage: aPackage [
 ]
 
 { #category : #build }
-PhxDvVisWorkScope >> addPackageGroup: aPackageGroup [
+DvRoWorkScope >> addPackageGroup: aPackageGroup [
 
 	| pg |
-	pg := PhxDvVisPackageGroup newWithModel: aPackageGroup under: self.
+	pg := DvRoPackageGroup newWithModel: aPackageGroup under: self.
 	pg build
 ]
 
 { #category : #private }
-PhxDvVisWorkScope >> addToManyRelationOnParent [
+DvRoWorkScope >> addToManyRelationOnParent [
 	"no parent, no need"
 ]
 
 { #category : #build }
-PhxDvVisWorkScope >> applyLayoutHierarchical [
+DvRoWorkScope >> applyLayoutHierarchical [
 
 	| rsLayout |
-	rsLayout := PhxDvHorizontalTreeLayout new.
+	rsLayout := DvHorizontalTreeLayout new.
 	rsLayout
 		horizontalGap: 50;
 		verticalGap: 5.
@@ -58,7 +64,7 @@ PhxDvVisWorkScope >> applyLayoutHierarchical [
 ]
 
 { #category : #build }
-PhxDvVisWorkScope >> build [
+DvRoWorkScope >> build [
 
 	self addAllPackages.
 	self addAllPackageGroups.
@@ -70,7 +76,7 @@ PhxDvVisWorkScope >> build [
 ]
 
 { #category : #build }
-PhxDvVisWorkScope >> connectAllPackages [
+DvRoWorkScope >> connectAllPackages [
 
 	self newLineBuilder
 		fromShapes: (self packages collect: #mainShape);
@@ -80,13 +86,13 @@ PhxDvVisWorkScope >> connectAllPackages [
 ]
 
 { #category : #'initialize-release' }
-PhxDvVisWorkScope >> initialize [
+DvRoWorkScope >> initialize [
 	super initialize.
 
 ]
 
 { #category : #build }
-PhxDvVisWorkScope >> marker [
+DvRoWorkScope >> marker [
 	|  marker |
 	marker := RSShapeFactory arrow.
 	marker color: self textColor.
@@ -97,7 +103,7 @@ PhxDvVisWorkScope >> marker [
 ]
 
 { #category : #build }
-PhxDvVisWorkScope >> newLineBuilder [
+DvRoWorkScope >> newLineBuilder [
 
 	| marker |
 	marker := self marker.
@@ -112,26 +118,26 @@ PhxDvVisWorkScope >> newLineBuilder [
 ]
 
 { #category : #accessing }
-PhxDvVisWorkScope >> packageGroups [
+DvRoWorkScope >> packageGroups [
 
 	packageGroups ifNil: [ packageGroups := OrderedCollection new ].
 	^ packageGroups
 ]
 
 { #category : #accessing }
-PhxDvVisWorkScope >> packages [
+DvRoWorkScope >> packages [
 
 	packages ifNil: [ packages := OrderedCollection new ].
 	^ packages
 ]
 
 { #category : #private }
-PhxDvVisWorkScope >> removeFromManyRelationOnParent [
+DvRoWorkScope >> removeFromManyRelationOnParent [
 	"no parent, no need"
 ]
 
 { #category : #accessing }
-PhxDvVisWorkScope >> rsCanvas [
+DvRoWorkScope >> rsCanvas [
 
 	rsCanvas ifNil: [ 
 		rsCanvas := RSCanvas new.
@@ -142,13 +148,13 @@ PhxDvVisWorkScope >> rsCanvas [
 ]
 
 { #category : #'setUp-tearDown' }
-PhxDvVisWorkScope >> setupListenersToModel [
+DvRoWorkScope >> setupListenersToModel [
 	super setupListenersToModel.
 
 ]
 
 { #category : #build }
-PhxDvVisWorkScope >> textColor [
+DvRoWorkScope >> textColor [
 
 	^ Color lightGray 
 ]

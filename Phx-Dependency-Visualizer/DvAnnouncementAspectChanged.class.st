@@ -1,6 +1,6 @@
 Class {
-	#name : #PhxDvAnnouncementAspectChanged,
-	#superclass : #PhxDvAnnouncement,
+	#name : #DvAnnouncementAspectChanged,
+	#superclass : #DvAnnouncement,
 	#instVars : [
 		'aspect'
 	],
@@ -8,18 +8,18 @@ Class {
 }
 
 { #category : #'instance creation' }
-PhxDvAnnouncementAspectChanged class >> onModel: aModel aspect: anAspect [
+DvAnnouncementAspectChanged class >> onModel: aModel aspect: anAspect [
 	^ (super onModel: aModel)
 		aspect: anAspect;
 		yourself
 ]
 
 { #category : #accessing }
-PhxDvAnnouncementAspectChanged >> aspect [
+DvAnnouncementAspectChanged >> aspect [
 	^ aspect
 ]
 
 { #category : #accessing }
-PhxDvAnnouncementAspectChanged >> aspect: anObject [
+DvAnnouncementAspectChanged >> aspect: anObject [
 	aspect := anObject
 ]

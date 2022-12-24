@@ -1,15 +1,15 @@
 Trait {
-	#name : #PhxDvInAndOutHighlitable,
-	#category : #'Phx-Dependency-Visualizer-viz gen1'
+	#name : #DvInAndOutHighlitable,
+	#category : #'Phx-Dependency-Visualizer-visualisation common'
 }
 
 { #category : #highliting }
-PhxDvInAndOutHighlitable >> antAnimations [
+DvInAndOutHighlitable >> antAnimations [
 	^self canvas propertyAt: #antAnimations ifAbsentPut: [ OrderedCollection new ]
 ]
 
 { #category : #highliting }
-PhxDvInAndOutHighlitable >> highlight: evt [
+DvInAndOutHighlitable >> highlight: evt [
 
 	| box incomingLines outgoingLines incomingBoxes outgoingBoxes |
 	box := evt shape.
@@ -36,7 +36,7 @@ PhxDvInAndOutHighlitable >> highlight: evt [
 ]
 
 { #category : #highliting }
-PhxDvInAndOutHighlitable >> highlightAnt: antBorder [
+DvInAndOutHighlitable >> highlightAnt: antBorder [
 
 	| animation canv |
 	canv := self canvas.
@@ -54,7 +54,7 @@ PhxDvInAndOutHighlitable >> highlightAnt: antBorder [
 ]
 
 { #category : #highliting }
-PhxDvInAndOutHighlitable >> highlightBoxes: boxes withColor: aColor [
+DvInAndOutHighlitable >> highlightBoxes: boxes withColor: aColor [
 
 	| canv  |
 	canv := self canvas.
@@ -72,7 +72,7 @@ PhxDvInAndOutHighlitable >> highlightBoxes: boxes withColor: aColor [
 ]
 
 { #category : #highliting }
-PhxDvInAndOutHighlitable >> highlightLines: lines withColor: aColor [
+DvInAndOutHighlitable >> highlightLines: lines withColor: aColor [
 
 	| antBorder |
 	lines ifEmpty: [ ^ self ].
@@ -89,7 +89,7 @@ PhxDvInAndOutHighlitable >> highlightLines: lines withColor: aColor [
 ]
 
 { #category : #highliting }
-PhxDvInAndOutHighlitable >> highlightable [
+DvInAndOutHighlitable >> highlightable [
 	^ RSHighlightable new
 		when: RSHighlightEvent send: #highlight: to: self;
 		when: RSUnHighlightEvent send: #unhighlight: to: self;
@@ -97,19 +97,19 @@ PhxDvInAndOutHighlitable >> highlightable [
 ]
 
 { #category : #highliting }
-PhxDvInAndOutHighlitable >> incomingHighliteColor [
+DvInAndOutHighlitable >> incomingHighliteColor [
 
 	^ Color green darker darker
 ]
 
 { #category : #highliting }
-PhxDvInAndOutHighlitable >> outgoingHighliteColor [
+DvInAndOutHighlitable >> outgoingHighliteColor [
 
 	^ Color red darker darker
 ]
 
 { #category : #highliting }
-PhxDvInAndOutHighlitable >> shadowFor: box [
+DvInAndOutHighlitable >> shadowFor: box [
 	^ RSBox new
 		position: box positionInCanvas;
 		extent: box extent + 3;
@@ -118,14 +118,14 @@ PhxDvInAndOutHighlitable >> shadowFor: box [
 ]
 
 { #category : #highliting }
-PhxDvInAndOutHighlitable >> stopAndRemoveAllAnimations [
+DvInAndOutHighlitable >> stopAndRemoveAllAnimations [
 
 	self antAnimations do: [ :anim | anim stop ].
 	self antAnimations removeAll
 ]
 
 { #category : #highliting }
-PhxDvInAndOutHighlitable >> unhighlight: evt [
+DvInAndOutHighlitable >> unhighlight: evt [
 
 	self stopAndRemoveAllAnimations.
 	evt canvas
@@ -136,14 +136,14 @@ PhxDvInAndOutHighlitable >> unhighlight: evt [
 ]
 
 { #category : #highliting }
-PhxDvInAndOutHighlitable >> unhighlightBoxes: boxes [
+DvInAndOutHighlitable >> unhighlightBoxes: boxes [
 	boxes do: [ :box | 
 		box propertyAt: #shadow ifPresent: [ :shadow | shadow remove ] ]
 	
 ]
 
 { #category : #highliting }
-PhxDvInAndOutHighlitable >> unhighlightLines: lines [
+DvInAndOutHighlitable >> unhighlightLines: lines [
 
 	lines do: [ :line | 
 

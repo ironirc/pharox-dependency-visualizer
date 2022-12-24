@@ -1,5 +1,5 @@
 Class {
-	#name : #PhxDvClass,
-	#superclass : #PhxDvNamedObjectInScope,
+	#name : #DvPackageTag,
+	#superclass : #DvNamedObjectInScope,
 	#category : #'Phx-Dependency-Visualizer-model not yet'
 }

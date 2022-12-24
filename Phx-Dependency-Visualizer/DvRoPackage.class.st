@@ -1,16 +1,16 @@
 Class {
-	#name : #PhxDvVisPackage,
-	#superclass : #PhxDvRoObject,
-	#category : #'Phx-Dependency-Visualizer-viz gen2'
+	#name : #DvRoPackage,
+	#superclass : #DvRoObject,
+	#category : #'Phx-Dependency-Visualizer-visualisation gen2'
 }
 
 { #category : #private }
-PhxDvVisPackage >> addToManyRelationOnParent [
+DvRoPackage >> addToManyRelationOnParent [
 	self parent packages add: self
 ]
 
 { #category : #building }
-PhxDvVisPackage >> build [
+DvRoPackage >> build [
 
 	| compos label box |
 	self mainShape ifNotNil: [ 
@@ -35,7 +35,7 @@ PhxDvVisPackage >> build [
 ]
 
 { #category : #'announcement handling' }
-PhxDvVisPackage >> handleAnnouncementAspectChanged: a [
+DvRoPackage >> handleAnnouncementAspectChanged: a [
 	| ns |
 	ns := self mainShape.
 	ns ifNil: [ ^ self ].
@@ -46,13 +46,13 @@ PhxDvVisPackage >> handleAnnouncementAspectChanged: a [
 ]
 
 { #category : #'initialize-release' }
-PhxDvVisPackage >> initialize [
+DvRoPackage >> initialize [
 	super initialize.
 
 ]
 
 { #category : #printing }
-PhxDvVisPackage >> printOn: ws [
+DvRoPackage >> printOn: ws [
 
 	super printOn: ws.
 	ws << ' ('.
@@ -61,18 +61,18 @@ PhxDvVisPackage >> printOn: ws [
 ]
 
 { #category : #private }
-PhxDvVisPackage >> removeFromManyRelationOnParent [
+DvRoPackage >> removeFromManyRelationOnParent [
 	self parent packages remove: self
 ]
 
 { #category : #'setUp-tearDown' }
-PhxDvVisPackage >> setupListenersToModel [
+DvRoPackage >> setupListenersToModel [
 	super setupListenersToModel.
 
 ]
 
 { #category : #'setUp-tearDown' }
-PhxDvVisPackage >> tearDown [
+DvRoPackage >> tearDown [
 	self mainShape ifNotNil: [ :ms | self canvas removeShape: ms ].
 	self parent: nil.
 	self model: nil

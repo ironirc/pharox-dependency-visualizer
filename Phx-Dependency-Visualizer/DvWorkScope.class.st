@@ -3,8 +3,8 @@ Contains all parts of the project we want to take in consideration.
 -packages, package groups (baselines, repo's)
 "
 Class {
-	#name : #PhxDvWorkScope,
-	#superclass : #PhxDvAbstractObject,
+	#name : #DvWorkScope,
+	#superclass : #DvAbstractObject,
 	#instVars : [
 		'packageRelationGraph',
 		'packages',
@@ -14,7 +14,7 @@ Class {
 }
 
 { #category : #examples }
-PhxDvWorkScope class >> example1 [
+DvWorkScope class >> example1 [
 
 	"
 PhxDependencyVisualizer allPhxPackages
@@ -33,7 +33,7 @@ self example1
 ]
 
 { #category : #adding }
-PhxDvWorkScope >> addPackage: aPackage [ 
+DvWorkScope >> addPackage: aPackage [ 
 
 	self packages add: aPackage.
 	aPackage scope: self.
@@ -41,7 +41,7 @@ PhxDvWorkScope >> addPackage: aPackage [
 ]
 
 { #category : #adding }
-PhxDvWorkScope >> addPackageGroup: aPackageGroup [
+DvWorkScope >> addPackageGroup: aPackageGroup [
 
 	self packageGroups add: aPackageGroup.
 	aPackageGroup scope: self.
@@ -49,30 +49,30 @@ PhxDvWorkScope >> addPackageGroup: aPackageGroup [
 ]
 
 { #category : #adding }
-PhxDvWorkScope >> addPackageGroupNamed: aName [
+DvWorkScope >> addPackageGroupNamed: aName [
 
 	| p |
-	p := PhxDvPackageGroup newNamed: aName.
+	p := DvPackageGroup newNamed: aName.
 	self addPackageGroup: p.
 ]
 
 { #category : #adding }
-PhxDvWorkScope >> addPackageNamed: aName [
+DvWorkScope >> addPackageNamed: aName [
 
 	| p |
-	p := PhxDvPackage newNamed: aName.
+	p := DvPackage newNamed: aName.
 	self addPackage: p.
 ]
 
 { #category : #accessing }
-PhxDvWorkScope >> allPackageNamesDependedOnByPackageNamed: aPackageName [
+DvWorkScope >> allPackageNamesDependedOnByPackageNamed: aPackageName [
 
 	^ (self packageRelationGraph packageAt: aPackageName)
 		  dependentPackages collect: [ :e | e packageName ]
 ]
 
 { #category : #accessing }
-PhxDvWorkScope >> allPhxPackagesDependingOn: aPackageName [
+DvWorkScope >> allPhxPackagesDependingOn: aPackageName [
 
 	| pNames |
 	pNames := self dependentPackageNamesOfPackageNamed: aPackageName.
@@ -80,13 +80,13 @@ PhxDvWorkScope >> allPhxPackagesDependingOn: aPackageName [
 ]
 
 { #category : #roassal }
-PhxDvWorkScope >> asRoassalVisualization [
+DvWorkScope >> asRoassalVisualization [
 
-	^ PhxDvVisWorkScope new model: self
+	^ DvRoWorkScope new model: self
 ]
 
 { #category : #adding }
-PhxDvWorkScope >> groupPackages: aBlock as: aName [ 
+DvWorkScope >> groupPackages: aBlock as: aName [ 
 
 	| pg |
 	pg := self packageGroupNamedOrCreate: aName. 
@@ -95,7 +95,7 @@ PhxDvWorkScope >> groupPackages: aBlock as: aName [
 ]
 
 { #category : #adding }
-PhxDvWorkScope >> packageGroupNamed: aName isAbsentPut: aBlock [
+DvWorkScope >> packageGroupNamed: aName isAbsentPut: aBlock [
 
 	^ self packageGroups
 		  detect: [ :pg | pg name = aName ]
@@ -103,26 +103,26 @@ PhxDvWorkScope >> packageGroupNamed: aName isAbsentPut: aBlock [
 ]
 
 { #category : #adding }
-PhxDvWorkScope >> packageGroupNamedOrCreate: aName [
+DvWorkScope >> packageGroupNamedOrCreate: aName [
 
-	^self packageGroupNamed: aName isAbsentPut: [ PhxDvPackageGroup newNamed: aName  ]
+	^self packageGroupNamed: aName isAbsentPut: [ DvPackageGroup newNamed: aName  ]
 	
 ]
 
 { #category : #accessing }
-PhxDvWorkScope >> packageGroups [
+DvWorkScope >> packageGroups [
 
 	packageGroups ifNil: [ packageGroups := OrderedCollection new ].
 	^ packageGroups
 ]
 
 { #category : #adding }
-PhxDvWorkScope >> packageNames [  
+DvWorkScope >> packageNames [  
 	^self packages collect: #name
 ]
 
 { #category : #adding }
-PhxDvWorkScope >> packageRelationGraph [
+DvWorkScope >> packageRelationGraph [
 
 	packageRelationGraph ifNil: [ 
 		| g |
@@ -135,14 +135,14 @@ PhxDvWorkScope >> packageRelationGraph [
 ]
 
 { #category : #accessing }
-PhxDvWorkScope >> packages [
+DvWorkScope >> packages [
 
 	packages ifNil: [ packages := OrderedCollection new ].
 	^ packages
 ]
 
 { #category : #accessing }
-PhxDvWorkScope >> packagesDependedOnByPackageNamed: aPackageName [
+DvWorkScope >> packagesDependedOnByPackageNamed: aPackageName [
 
 	| pNames |
 	pNames := self allPackageNamesDependedOnByPackageNamed: aPackageName.

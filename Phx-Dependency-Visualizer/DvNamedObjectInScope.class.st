@@ -1,6 +1,6 @@
 Class {
-	#name : #PhxDvNamedObjectInScope,
-	#superclass : #PhxDvAbstractObject,
+	#name : #DvNamedObjectInScope,
+	#superclass : #DvAbstractObject,
 	#instVars : [
 		'scope',
 		'name'
@@ -9,13 +9,13 @@ Class {
 }
 
 { #category : #accessing }
-PhxDvNamedObjectInScope >> name [
+DvNamedObjectInScope >> name [
 
 	^ name
 ]
 
 { #category : #accessing }
-PhxDvNamedObjectInScope >> name: anObject [
+DvNamedObjectInScope >> name: anObject [
 
 	name := anObject.
 	self changed: #name 
@@ -23,7 +23,7 @@ PhxDvNamedObjectInScope >> name: anObject [
 ]
 
 { #category : #printing }
-PhxDvNamedObjectInScope >> printOn: ws [
+DvNamedObjectInScope >> printOn: ws [
 
 	super printOn: ws.
 	ws << ' ('.
@@ -32,13 +32,13 @@ PhxDvNamedObjectInScope >> printOn: ws [
 ]
 
 { #category : #accessing }
-PhxDvNamedObjectInScope >> scope [
+DvNamedObjectInScope >> scope [
 
 	^ scope
 ]
 
 { #category : #accessing }
-PhxDvNamedObjectInScope >> scope: anObject [
+DvNamedObjectInScope >> scope: anObject [
 
 	scope := anObject.
 	self changed: #scope

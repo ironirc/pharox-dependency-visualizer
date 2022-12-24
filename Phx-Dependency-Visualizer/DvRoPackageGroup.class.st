@@ -1,16 +1,16 @@
 Class {
-	#name : #PhxDvVisPackageGroup,
-	#superclass : #PhxDvRoObject,
-	#category : #'Phx-Dependency-Visualizer-viz gen2'
+	#name : #DvRoPackageGroup,
+	#superclass : #DvRoObject,
+	#category : #'Phx-Dependency-Visualizer-visualisation gen2'
 }
 
 { #category : #private }
-PhxDvVisPackageGroup >> addToManyRelationOnParent [
+DvRoPackageGroup >> addToManyRelationOnParent [
 	self parent packageGroups add: self
 ]
 
 { #category : #building }
-PhxDvVisPackageGroup >> adjustBox: box on: someShapes [
+DvRoPackageGroup >> adjustBox: box on: someShapes [
 
 	| rect |
 	rect := someShapes encompassingRectangle.
@@ -20,7 +20,7 @@ PhxDvVisPackageGroup >> adjustBox: box on: someShapes [
 ]
 
 { #category : #building }
-PhxDvVisPackageGroup >> build [
+DvRoPackageGroup >> build [
 
 	| pckgs compos label border box |
 	self mainShape ifNotNil: [ 
@@ -52,13 +52,13 @@ PhxDvVisPackageGroup >> build [
 ]
 
 { #category : #building }
-PhxDvVisPackageGroup >> containedPackageShapes [
+DvRoPackageGroup >> containedPackageShapes [
 
 	^ self containedPackages collect: #mainShape
 ]
 
 { #category : #building }
-PhxDvVisPackageGroup >> containedPackages [
+DvRoPackageGroup >> containedPackages [
 
 	^ self model packages collect: [ :eachModelPckg | 
 		  self parent packages detect: [ :eachVisPckg | 
@@ -66,18 +66,18 @@ PhxDvVisPackageGroup >> containedPackages [
 ]
 
 { #category : #'announcement handling' }
-PhxDvVisPackageGroup >> handleAnnouncementAspectChanged: a [
+DvRoPackageGroup >> handleAnnouncementAspectChanged: a [
 	
 ]
 
 { #category : #'initialize-release' }
-PhxDvVisPackageGroup >> initialize [
+DvRoPackageGroup >> initialize [
 	super initialize.
 
 ]
 
 { #category : #printing }
-PhxDvVisPackageGroup >> printOn: ws [
+DvRoPackageGroup >> printOn: ws [
 
 	super printOn: ws.
 	ws << ' ('.
@@ -86,18 +86,18 @@ PhxDvVisPackageGroup >> printOn: ws [
 ]
 
 { #category : #private }
-PhxDvVisPackageGroup >> removeFromManyRelationOnParent [
+DvRoPackageGroup >> removeFromManyRelationOnParent [
 	self parent packageGroups remove: self
 ]
 
 { #category : #'setUp-tearDown' }
-PhxDvVisPackageGroup >> setupListenersToModel [
+DvRoPackageGroup >> setupListenersToModel [
 	super setupListenersToModel.
 
 ]
 
 { #category : #'setUp-tearDown' }
-PhxDvVisPackageGroup >> tearDown [
+DvRoPackageGroup >> tearDown [
 	self mainShape ifNotNil: [ :ms | self canvas removeShape: ms ].
 	self parent: nil.
 	self model: nil

@@ -1,31 +1,31 @@
 Class {
-	#name : #PhxDvPackage,
-	#superclass : #PhxDvNamedObjectInScope,
+	#name : #DvPackage,
+	#superclass : #DvNamedObjectInScope,
 	#category : #'Phx-Dependency-Visualizer-model'
 }
 
 { #category : #printing }
-PhxDvPackage >> computePackagesDependingOnYou [
+DvPackage >> computePackagesDependingOnYou [
 
 	^ self scope packages select: [ :p | 
 		  p packagesYouDependOn includes: self ]
 ]
 
 { #category : #printing }
-PhxDvPackage >> computePackagesYouDependOn [
+DvPackage >> computePackagesYouDependOn [
 
 	^(self scope packagesDependedOnByPackageNamed: self name) collect: [ :p | 
 		self scope packages detect: [ :wsP | wsP name = p name ] ]
 ]
 
 { #category : #accessing }
-PhxDvPackage >> packagesDependingOnYou [
+DvPackage >> packagesDependingOnYou [
 
 	^ self computePackagesDependingOnYou
 ]
 
 { #category : #accessing }
-PhxDvPackage >> packagesYouDependOn [
+DvPackage >> packagesYouDependOn [
 
 	^ self computePackagesYouDependOn
 ]

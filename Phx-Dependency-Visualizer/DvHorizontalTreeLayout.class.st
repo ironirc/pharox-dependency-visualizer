@@ -1,14 +1,14 @@
 Class {
-	#name : #PhxDvHorizontalTreeLayout,
+	#name : #DvHorizontalTreeLayout,
 	#superclass : #RSAbstractHorizontalTreeLayout,
 	#instVars : [
 		'layers'
 	],
-	#category : #'Phx-Dependency-Visualizer-viz gen1'
+	#category : #'Phx-Dependency-Visualizer-visualisation common'
 }
 
 { #category : #'private - hook' }
-PhxDvHorizontalTreeLayout >> childrenFor: aNode [
+DvHorizontalTreeLayout >> childrenFor: aNode [
 
 	| all |
 	all := super childrenFor: aNode.
@@ -19,12 +19,12 @@ PhxDvHorizontalTreeLayout >> childrenFor: aNode [
 ]
 
 { #category : #'private - hook' }
-PhxDvHorizontalTreeLayout >> computeChildrenFor: aNode [
+DvHorizontalTreeLayout >> computeChildrenFor: aNode [
 	^ self childrenFor: aNode except: alreadyLayoutedNodes
 ]
 
 { #category : #'private - hook' }
-PhxDvHorizontalTreeLayout >> distributeChildrenInLayers: elements [
+DvHorizontalTreeLayout >> distributeChildrenInLayers: elements [
 
 	| nextLayer |
 	nextLayer := Set new.
@@ -36,7 +36,7 @@ PhxDvHorizontalTreeLayout >> distributeChildrenInLayers: elements [
 ]
 
 { #category : #'private - hook' }
-PhxDvHorizontalTreeLayout >> doExecute: elements [
+DvHorizontalTreeLayout >> doExecute: elements [
 
 	| unConnectedNodes rootNodes leftOvers |
 	alreadyLayoutedNodes := OrderedCollection new.
@@ -65,26 +65,26 @@ PhxDvHorizontalTreeLayout >> doExecute: elements [
 ]
 
 { #category : #'private - hook' }
-PhxDvHorizontalTreeLayout >> heightOfLayer: layer [
+DvHorizontalTreeLayout >> heightOfLayer: layer [
 
 	^ layer inject: 0 into: [ :sum :each | sum + (each height * 2) ]
 ]
 
 { #category : #initialization }
-PhxDvHorizontalTreeLayout >> initialize [
+DvHorizontalTreeLayout >> initialize [
 	super initialize.
 	layers := OrderedCollection new
 ]
 
 { #category : #'private - hook' }
-PhxDvHorizontalTreeLayout >> isAlreadyInAPreviousLayer: aNode [
+DvHorizontalTreeLayout >> isAlreadyInAPreviousLayer: aNode [
 
 	nodesByLayer do: [ :layer | layer do: [ :n | aNode = n ifTrue: [ ^true ] ] ].
 	^false
 ]
 
 { #category : #'private - hook' }
-PhxDvHorizontalTreeLayout >> layout: aNodeCollection atPoint: aPoint atLayer: aNumber [
+DvHorizontalTreeLayout >> layout: aNodeCollection atPoint: aPoint atLayer: aNumber [
 	| treeSize childrenPosition x y middleOfTree |
 	aNodeCollection isEmpty ifTrue: [ ^ 0 ].
 	x := aPoint x.
@@ -103,7 +103,7 @@ PhxDvHorizontalTreeLayout >> layout: aNodeCollection atPoint: aPoint atLayer: aN
 ]
 
 { #category : #'private - hook' }
-PhxDvHorizontalTreeLayout >> layoutLayers [
+DvHorizontalTreeLayout >> layoutLayers [
 
 	| maxLayerHeight |
 	maxLayerHeight := self maxLayerHeight.
@@ -118,7 +118,7 @@ PhxDvHorizontalTreeLayout >> layoutLayers [
 ]
 
 { #category : #'private - hook' }
-PhxDvHorizontalTreeLayout >> maxLayerHeight [
+DvHorizontalTreeLayout >> maxLayerHeight [
 
 	^ nodesByLayer
 		  inject: 0
@@ -126,7 +126,7 @@ PhxDvHorizontalTreeLayout >> maxLayerHeight [
 ]
 
 { #category : #'private - hook' }
-PhxDvHorizontalTreeLayout >> nodeCountContainedInLayers [
+DvHorizontalTreeLayout >> nodeCountContainedInLayers [
 
 	| all |
 	all := OrderedCollection new.

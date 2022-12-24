@@ -1,6 +1,6 @@
 Class {
-	#name : #PhxDvPackageGroup,
-	#superclass : #PhxDvNamedObjectInScope,
+	#name : #DvPackageGroup,
+	#superclass : #DvNamedObjectInScope,
 	#instVars : [
 		'packages'
 	],
@@ -8,13 +8,13 @@ Class {
 }
 
 { #category : #accessing }
-PhxDvPackageGroup >> addPackage: aPackage [
+DvPackageGroup >> addPackage: aPackage [
 
  	self packages add: aPackage
 ]
 
 { #category : #accessing }
-PhxDvPackageGroup >> packages [
+DvPackageGroup >> packages [
 
 	packages ifNil: [ packages := OrderedCollection new ].
 	^ packages

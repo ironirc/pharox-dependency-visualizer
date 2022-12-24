@@ -1,20 +1,20 @@
 Class {
-	#name : #PhxDvPackageTest,
+	#name : #DvPackageTest,
 	#superclass : #TestCase,
 	#category : #'Phx-Dependency-Visualizer-testing'
 }
 
 { #category : #tests }
-PhxDvPackageTest >> test1 [
+DvPackageTest >> test1 [
 
 	| p |
-	p := PhxDvPackage newNamed: self class package name.
+	p := DvPackage newNamed: self class package name.
 ]
 
 { #category : #tests }
-PhxDvPackageTest >> test2 [
+DvPackageTest >> test2 [
 
 	| ws |
-	ws := PhxDvWorkScope example1.
+	ws := DvWorkScope example1.
 	ws packages do: [ :i | i packagesYouDependOn; computePackagesDependingOnYou ]
 ]

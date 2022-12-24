@@ -1,5 +1,5 @@
 Class {
-	#name : #PhxDvAnnouncement,
+	#name : #DvAnnouncement,
 	#superclass : #Announcement,
 	#instVars : [
 		'model'
@@ -8,18 +8,18 @@ Class {
 }
 
 { #category : #'instance creation' }
-PhxDvAnnouncement class >> onModel: aModel [
+DvAnnouncement class >> onModel: aModel [
 	^ self new
 		model: aModel;
 		yourself
 ]
 
 { #category : #accessing }
-PhxDvAnnouncement >> model [
+DvAnnouncement >> model [
 	^ model
 ]
 
 { #category : #accessing }
-PhxDvAnnouncement >> model: anObject [
+DvAnnouncement >> model: anObject [
 	model := anObject
 ]

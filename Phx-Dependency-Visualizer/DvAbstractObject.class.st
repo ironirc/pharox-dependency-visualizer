@@ -1,11 +1,11 @@
 Class {
-	#name : #PhxDvAbstractObject,
+	#name : #DvAbstractObject,
 	#superclass : #Model,
 	#category : #'Phx-Dependency-Visualizer-model'
 }
 
 { #category : #'instance creation' }
-PhxDvAbstractObject class >> newNamed: aName [
+DvAbstractObject class >> newNamed: aName [
 
 	| inst |
 	inst := self new.

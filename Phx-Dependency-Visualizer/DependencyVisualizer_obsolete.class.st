@@ -1,18 +1,18 @@
 Class {
-	#name : #PhxDependencyVisualizer,
+	#name : #'DependencyVisualizer_obsolete',
 	#superclass : #Object,
-	#traits : 'PhxDvInAndOutHighlitable',
-	#classTraits : 'PhxDvInAndOutHighlitable classTrait',
+	#traits : 'DvInAndOutHighlitable',
+	#classTraits : 'DvInAndOutHighlitable classTrait',
 	#instVars : [
 		'packageShapeSelections',
 		'packageRelationGraph',
 		'canvas'
 	],
-	#category : #'Phx-Dependency-Visualizer-viz gen1'
+	#category : #'Phx-Dependency-Visualizer-visualisation gen1'
 }
 
 { #category : #model }
-PhxDependencyVisualizer class >> allPhxPackages [
+DependencyVisualizer_obsolete class >> allPhxPackages [
 "
 PhxDependencyVisualizer allPhxPackages
 "
@@ -23,13 +23,13 @@ PhxDependencyVisualizer allPhxPackages
 ]
 
 { #category : #model }
-PhxDependencyVisualizer >> allPhxPackages [
+DependencyVisualizer_obsolete >> allPhxPackages [
 
 	^self class allPhxPackages
 ]
 
 { #category : #model }
-PhxDependencyVisualizer >> allPhxPackagesDependingOn: aPackageName [
+DependencyVisualizer_obsolete >> allPhxPackagesDependingOn: aPackageName [
 
 	| pNames |
 	pNames := self dependentPackageNamesOfPackageNamed: aPackageName.
@@ -37,7 +37,7 @@ PhxDependencyVisualizer >> allPhxPackagesDependingOn: aPackageName [
 ]
 
 { #category : #model }
-PhxDependencyVisualizer >> allPhxRepositories [
+DependencyVisualizer_obsolete >> allPhxRepositories [
 "
 self allPhxRepositories
 "
@@ -49,7 +49,7 @@ self allPhxRepositories
 ]
 
 { #category : #model }
-PhxDependencyVisualizer >> allPhxRepositoriesWithoutPharoX [
+DependencyVisualizer_obsolete >> allPhxRepositoriesWithoutPharoX [
 "
 self allPhxRepositoriesWithoutPharoX
 "
@@ -57,13 +57,13 @@ self allPhxRepositoriesWithoutPharoX
 ]
 
 { #category : #menu }
-PhxDependencyVisualizer >> browse: evt [
+DependencyVisualizer_obsolete >> browse: evt [
 	self stopAndRemoveAllAnimations.
 	evt shape model browse
 ]
 
 { #category : #visualisation }
-PhxDependencyVisualizer >> canvas [
+DependencyVisualizer_obsolete >> canvas [
 
 	canvas ifNil: [ 
 		canvas := RSCanvas new.
@@ -74,20 +74,20 @@ PhxDependencyVisualizer >> canvas [
 ]
 
 { #category : #model }
-PhxDependencyVisualizer >> containingRepositoriesOfPackage: aPackage [  
+DependencyVisualizer_obsolete >> containingRepositoriesOfPackage: aPackage [  
 
 	^IceRepository registry select: [ :p | p includesPackageNamed:  aPackage name ]
 ]
 
 { #category : #model }
-PhxDependencyVisualizer >> dependentPackageNamesOfPackageNamed: aPackageName [
+DependencyVisualizer_obsolete >> dependentPackageNamesOfPackageNamed: aPackageName [
 
 	^ (self packageRelationGraph packageAt: aPackageName)
 		  dependentPackages collect: [ :e | e packageName ]
 ]
 
 { #category : #'package selections' }
-PhxDependencyVisualizer >> deselectPackageShape: sh [
+DependencyVisualizer_obsolete >> deselectPackageShape: sh [
 
 	(self isPackageShapeSelected: sh) ifTrue: [ 
 		self packageShapeSelections remove: sh.
@@ -95,7 +95,7 @@ PhxDependencyVisualizer >> deselectPackageShape: sh [
 ]
 
 { #category : #visualisation }
-PhxDependencyVisualizer >> graph [
+DependencyVisualizer_obsolete >> graph [
 
 	<script: 'self new graph'>
 	| data boxes canv rsLayout |
@@ -107,7 +107,7 @@ PhxDependencyVisualizer >> graph [
 		canvas: canv;
 		connectToAll: [ :p | self allPhxPackagesDependingOn: p name ].
 	canv lines pushBack.
-	rsLayout := PhxDvHorizontalTreeLayout new.
+	rsLayout := DvHorizontalTreeLayout new.
 	rsLayout
 		horizontalGap: 50;
 		verticalGap: 5.
@@ -118,25 +118,25 @@ PhxDependencyVisualizer >> graph [
 ]
 
 { #category : #'package selections' }
-PhxDependencyVisualizer >> highlitePackageShapeAsSelected: sh [
+DependencyVisualizer_obsolete >> highlitePackageShapeAsSelected: sh [
 
 	sh shapes first color: Color yellow.
 ]
 
 { #category : #'package selections' }
-PhxDependencyVisualizer >> isPackageShapeSelected: sh [
+DependencyVisualizer_obsolete >> isPackageShapeSelected: sh [
 
 	^self packageShapeSelections includes: sh
 ]
 
 { #category : #menu }
-PhxDependencyVisualizer >> leftClick: evt [
+DependencyVisualizer_obsolete >> leftClick: evt [
 
 	evt shape ifNotNil: [:sh | (sh model isKindOf: RPackage) ifTrue: [ self shapeClicked: sh ] ]
 ]
 
 { #category : #visualisation }
-PhxDependencyVisualizer >> marker [
+DependencyVisualizer_obsolete >> marker [
 	|  marker |
 	marker := RSShapeFactory arrow.
 	marker color: self textColor.
@@ -147,7 +147,7 @@ PhxDependencyVisualizer >> marker [
 ]
 
 { #category : #visualisation }
-PhxDependencyVisualizer >> newLineBuilder [
+DependencyVisualizer_obsolete >> newLineBuilder [
 
 	| marker |
 	marker := self marker.
@@ -162,7 +162,7 @@ PhxDependencyVisualizer >> newLineBuilder [
 ]
 
 { #category : #visualisation }
-PhxDependencyVisualizer >> newShapeFor: model [
+DependencyVisualizer_obsolete >> newShapeFor: model [
 
 	| label box shape |
 	label := RSLabel new
@@ -184,7 +184,7 @@ PhxDependencyVisualizer >> newShapeFor: model [
 ]
 
 { #category : #model }
-PhxDependencyVisualizer >> packageRelationGraph [
+DependencyVisualizer_obsolete >> packageRelationGraph [
 
 	packageRelationGraph ifNil: [ 
 		| g |
@@ -198,7 +198,7 @@ PhxDependencyVisualizer >> packageRelationGraph [
 ]
 
 { #category : #'package selections' }
-PhxDependencyVisualizer >> packageShapeSelections [
+DependencyVisualizer_obsolete >> packageShapeSelections [
 
 	packageShapeSelections ifNil: [ 
 		packageShapeSelections := OrderedCollection new ].
@@ -206,25 +206,25 @@ PhxDependencyVisualizer >> packageShapeSelections [
 ]
 
 { #category : #model }
-PhxDependencyVisualizer >> packagesWithMultipleRepositories [
+DependencyVisualizer_obsolete >> packagesWithMultipleRepositories [
 
 	^self allPhxPackages select: [ :p | (self containingRepositoriesOfPackage: p) size > 1 ]
 ]
 
 { #category : #model }
-PhxDependencyVisualizer >> packagesWithoutRepositories [
+DependencyVisualizer_obsolete >> packagesWithoutRepositories [
 
 	^self allPhxPackages select: [ :p | (self containingRepositoriesOfPackage: p) isEmpty ]
 ]
 
 { #category : #menu }
-PhxDependencyVisualizer >> removeWithEvent: event [
+DependencyVisualizer_obsolete >> removeWithEvent: event [
 "not OK yet... not used"
 	self canvas removeShape: event shape
 ]
 
 { #category : #'transcript util' }
-PhxDependencyVisualizer >> reportToTranscript [
+DependencyVisualizer_obsolete >> reportToTranscript [
 
 	<script>
 	Transcript clear.
@@ -238,7 +238,7 @@ PhxDependencyVisualizer >> reportToTranscript [
 ]
 
 { #category : #'package selections' }
-PhxDependencyVisualizer >> selectPackageShape: sh [
+DependencyVisualizer_obsolete >> selectPackageShape: sh [
 
 	(self isPackageShapeSelected: sh) ifFalse: [ 
 		self packageShapeSelections add: sh.
@@ -246,20 +246,20 @@ PhxDependencyVisualizer >> selectPackageShape: sh [
 ]
 
 { #category : #'package selections' }
-PhxDependencyVisualizer >> shapeClicked: sh [
+DependencyVisualizer_obsolete >> shapeClicked: sh [
 
 	self toggleSelectionForPackageShape: sh
 ]
 
 { #category : #menu }
-PhxDependencyVisualizer >> showDepencyAnalyzerWithDoubleClickEvent: anEvent [
+DependencyVisualizer_obsolete >> showDepencyAnalyzerWithDoubleClickEvent: anEvent [
 	self stopAndRemoveAllAnimations.
 	(DAPackageDependenciesPresenter onPackagesNamed:
 		 { anEvent shape model name }) open
 ]
 
 { #category : #menu }
-PhxDependencyVisualizer >> showMenu: evt [
+DependencyVisualizer_obsolete >> showMenu: evt [
 
 	"	| menu newContext tool class |
 	context ifNil: [ ^ self ].
@@ -299,13 +299,13 @@ PhxDependencyVisualizer >> showMenu: evt [
 ]
 
 { #category : #visualisation }
-PhxDependencyVisualizer >> textColor [
+DependencyVisualizer_obsolete >> textColor [
 
 	^ Color lightGray 
 ]
 
 { #category : #'package selections' }
-PhxDependencyVisualizer >> toggleSelectionForPackageShape: sh [
+DependencyVisualizer_obsolete >> toggleSelectionForPackageShape: sh [
 
 	(self isPackageShapeSelected: sh)
 		ifTrue: [ self deselectPackageShape: sh ]
@@ -313,7 +313,7 @@ PhxDependencyVisualizer >> toggleSelectionForPackageShape: sh [
 ]
 
 { #category : #'package selections' }
-PhxDependencyVisualizer >> unhighlitePackageShapeAsSelected: sh [
+DependencyVisualizer_obsolete >> unhighlitePackageShapeAsSelected: sh [
 
 	sh shapes first  color: Color lightGray.
 ]
