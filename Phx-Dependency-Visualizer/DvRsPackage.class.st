@@ -37,13 +37,15 @@ DvRsPackage >> build [
 
 { #category : #'announcement handling' }
 DvRsPackage >> handleAnnouncementAspectChanged: a [
+
 	| sh |
 	sh := self mainShape.
 	sh ifNil: [ ^ self ].
-	a aspect == #name
-		ifTrue: [ | labelShape |
-			labelShape := sh shapeFromModel: a aspect.
-			labelShape text: a model name ]
+	a aspect == #name ifTrue: [ 
+		| labelShape |
+		labelShape := sh shapeFromModel: a aspect.
+		labelShape text: a model name.
+		self canvas signalUpdate ]
 ]
 
 { #category : #menu }
