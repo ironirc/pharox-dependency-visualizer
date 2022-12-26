@@ -9,6 +9,11 @@ DvRsObject >> handleAnnouncementAspectChanged: a [
 	self subclassResponsibility
 ]
 
+{ #category : #actions }
+DvRsObject >> leftClick: aRSMouseLeftClick [ 
+	"self shouldBeImplemented."
+]
+
 { #category : #'setUp-tearDown' }
 DvRsObject >> setupListenersToModel [
 	model announcer
