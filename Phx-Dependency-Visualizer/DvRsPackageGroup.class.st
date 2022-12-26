@@ -45,7 +45,8 @@ DvRsPackageGroup >> build [
 		          box.
 		          label } , pckgs)  asShapeFor: model.
 	"compos @ (RSPopup text: [ :neuron | neuron printStatisticDefinitions ])."
-	compos draggable.
+	
+	compos @ (RSDraggable new noValidateChildrenEvents).
 	compos when: RSMouseRightClick send: #showMenu: to: self.
 	compos when: RSMouseLeftClick send: #leftClick: to: self.
 	self mainShape: compos.
