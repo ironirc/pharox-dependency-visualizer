@@ -21,7 +21,7 @@ self example1
 	| vis c window |
 	vis := DvWorkScope example1 asRoassalVisualization.
 	c := vis build canvas.
-	window := c openWithTitle: 'Dependencies of BLA BLA'.
+	window := c openWithTitle: 'Dependencies of the Phx project'.
 	window extent: 2000 @ 1300.
 	c zoomToFit
 	"	vis inspect."

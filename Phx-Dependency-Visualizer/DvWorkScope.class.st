@@ -16,8 +16,7 @@ Class {
 { #category : #examples }
 DvWorkScope class >> example1 [
 
-	"
-PhxDependencyVisualizer allPhxPackages
+"
 self example1
 "
 
@@ -28,8 +27,36 @@ self example1
 		          collect: #name) sorted.
 	ws := self new.
 	names do: [ :n | ws addPackageNamed: n ].
-	ws groupPackages: [:p |  '*comp23*' match: p name ] as: 'C23'.
+	ws groupPackages: [:p |  '*comp23*' match: p name ] as: 'Comp23'.
+	ws groupPackages: [:p |  '*Phx-Pj-Core*' match: p name ] as: 'Phx-Pj-Core'.
 	^ ws
+]
+
+{ #category : #examples }
+DvWorkScope class >> example1Persist [
+
+"
+self example1 persistToClass: DvWorksScopeStorageForPhx
+"
+
+	| patterns names ws |
+	patterns := { 'phx*'. 'biti'. 'Pharo-home*'. '*ecg*' }.
+	names := ((RPackageOrganizer default packages select: [ :p | 
+		           patterns anySatisfy: [ :patt | patt match: p name ] ]) 
+		          collect: #name) sorted.
+	ws := self new.
+	names do: [ :n | ws addPackageNamed: n ].
+	ws groupPackages: [:p |  '*comp23*' match: p name ] as: 'Comp23'.
+	ws groupPackages: [:p |  '*Phx-Pj-Core*' match: p name ] as: 'Phx-Pj-Core'.
+	^ ws
+]
+
+{ #category : #'as yet unclassified' }
+DvWorkScope class >> readFromStorageClass: aClass [
+"
+	self readFromStorageClass: DvWorksScopeStorageForPhx
+"
+	^PhxJsonReader readFromString: (aClass json)
 ]
 
 { #category : #adding }
@@ -145,4 +172,12 @@ DvWorkScope >> packagesDependedOnByPackageNamed: aPackageName [
 	| pNames |
 	pNames := self allPackageNamesDependedOnByPackageNamed: aPackageName.
 	^ self packages select: [ :e | pNames includes: e name ]
+]
+
+{ #category : #accessing }
+DvWorkScope >> persistToClass: aClass [
+
+	aClass class compile: 'json
+	
+	^''' ,  self asPhxJsonString , '''' classified: 'persistence'
 ]
