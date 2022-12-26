@@ -73,12 +73,15 @@ DvRsWorkScope >> addToManyRelationOnParent [
 { #category : #build }
 DvRsWorkScope >> applyLayoutHierarchical [
 
-	| rsLayout |
+	| pckgs rsLayout |
 	rsLayout := DvHorizontalTreeLayout new.
 	rsLayout
 		horizontalGap: 50;
 		verticalGap: 5.
-	rsLayout on: (self rsPackages collect: [ :p | p mainShape ])
+	pckgs := self rsPackages reject: [ :e | 
+		         self rsPackageGroups contains: [ :pg | 
+			         pg containedPackages includes: e ] ].
+	rsLayout on: (pckgs collect: [ :p | p mainShape ])
 ]
 
 { #category : #build }
