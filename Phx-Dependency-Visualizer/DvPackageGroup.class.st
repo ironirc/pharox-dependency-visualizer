@@ -7,16 +7,16 @@ Class {
 	#category : #'Phx-Dependency-Visualizer-model'
 }
 
-{ #category : #'many relations' }
-DvPackageGroup >> addMeToScope: aScope [  
-
-	aScope addPackageGroup: self
-]
-
 { #category : #accessing }
 DvPackageGroup >> addPackage: aPackage [
 
  	self packages add: aPackage
+]
+
+{ #category : #'many relations' }
+DvPackageGroup >> addYourselfToScope: aScope [  
+
+	aScope addPackageGroup: self
 ]
 
 { #category : #accessing }
@@ -27,7 +27,7 @@ DvPackageGroup >> packages [
 ]
 
 { #category : #'many relations' }
-DvPackageGroup >> removeMeFromScope: aScope [  
+DvPackageGroup >> removeYourselfFromScope: aScope [  
 
 	aScope removePackageGroup: self
 ]

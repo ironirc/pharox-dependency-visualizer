@@ -40,8 +40,8 @@ DvNamedObjectInScope >> scope [
 { #category : #accessing }
 DvNamedObjectInScope >> scope: anObject [
 
-	scope ifNotNil: [ self removeMeFromScope: scope ].
+	scope ifNotNil: [ self removeYourselfFromScope: scope ].
 	scope := anObject.
-	scope ifNotNil: [ self addMeToScope: scope ].
+	scope ifNotNil: [ self addYourselfToScope: scope ].
 	self changed: #scope
 ]

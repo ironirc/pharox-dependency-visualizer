@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #'many relations' }
-DvPackage >> addMeToScope: aScope [  
+DvPackage >> addYourselfToScope: aScope [  
 
 	aScope addPackage: self
 ]
@@ -37,7 +37,7 @@ DvPackage >> packagesYouDependOn [
 ]
 
 { #category : #'many relations' }
-DvPackage >> removeMeFromScope: aScope [  
+DvPackage >> removeYourselfFromScope: aScope [  
 
 	aScope removePackage: self
 ]
