@@ -49,7 +49,14 @@ BaselineOfPharoXDependencyVisualizer >> packages: spec [
 
 { #category : #baselines }
 BaselineOfPharoXDependencyVisualizer >> postload: aLoader package: aPackageSpec [
-	
+
+	[ 
+	Metacello new
+		baseline: 'Roassal3';
+		repository: 'github://ObjectProfile/Roassal3';
+		load: 'Full' ]
+		on: MCMergeOrLoadWarning
+		do: [ :warning | warning load ]
 ]
 
 { #category : #'private - accessing' }
