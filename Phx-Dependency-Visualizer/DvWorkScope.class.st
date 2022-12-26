@@ -8,7 +8,8 @@ Class {
 	#instVars : [
 		'packageRelationGraph',
 		'packages',
-		'packageGroups'
+		'packageGroups',
+		'name'
 	],
 	#category : #'Phx-Dependency-Visualizer-model'
 }
@@ -20,35 +21,37 @@ DvWorkScope class >> example1 [
 self example1
 "
 
-	| patterns names ws |
+	| patterns names wsc |
 	patterns := { 'phx*'. 'biti'. 'Pharo-home*'. '*ecg*' }.
 	names := ((RPackageOrganizer default packages select: [ :p | 
 		           patterns anySatisfy: [ :patt | patt match: p name ] ]) 
 		          collect: #name) sorted.
-	ws := self new.
-	names do: [ :n | ws addPackageNamed: n ].
-	ws groupPackages: [:p |  '*comp23*' match: p name ] as: 'Comp23'.
-	ws groupPackages: [:p |  '*Phx-Pj-Core*' match: p name ] as: 'Phx-Pj-Core'.
-	^ ws
+	wsc := self new.
+	wsc name: 'PhxAndOthers'.
+	names do: [ :n | wsc addPackageNamed: n ].
+	wsc groupPackages: [:p |  '*comp23*' match: p name ] as: 'Comp23'.
+	wsc groupPackages: [:p |  '*Phx-Pj-Core*' match: p name ] as: 'Phx-Pj-Core'.
+	^ wsc
 ]
 
 { #category : #examples }
 DvWorkScope class >> example1Persist [
 
-"
-self example1 persistToClass: DvWorksScopeStorageForPhx
-"
+	self example1 saveAsPhxJsonFile
+]
 
-	| patterns names ws |
-	patterns := { 'phx*'. 'biti'. 'Pharo-home*'. '*ecg*' }.
-	names := ((RPackageOrganizer default packages select: [ :p | 
-		           patterns anySatisfy: [ :patt | patt match: p name ] ]) 
-		          collect: #name) sorted.
-	ws := self new.
-	names do: [ :n | ws addPackageNamed: n ].
-	ws groupPackages: [:p |  '*comp23*' match: p name ] as: 'Comp23'.
-	ws groupPackages: [:p |  '*Phx-Pj-Core*' match: p name ] as: 'Phx-Pj-Core'.
-	^ ws
+{ #category : #'as yet unclassified' }
+DvWorkScope class >> latestFileForName: aName [
+"
+self latestFileForName: 'PhxAndOthers'
+"
+	^ ('.' asFileReference filesMatching: aName , '*.phxjson') sorted lastOrNil 
+]
+
+{ #category : #'as yet unclassified' }
+DvWorkScope class >> readFromFileNamed: aFileName [
+
+	^ PhxJsonReader readFromString: aFileName asFileReference contents
 ]
 
 { #category : #'as yet unclassified' }
@@ -57,6 +60,16 @@ DvWorkScope class >> readFromStorageClass: aClass [
 	self readFromStorageClass: DvWorksScopeStorageForPhx
 "
 	^PhxJsonReader readFromString: (aClass json)
+]
+
+{ #category : #'as yet unclassified' }
+DvWorkScope class >> readlatestFromFileForName: aName [
+
+"
+self readlatestFromFileForName: 'PhxAndOthers'
+"
+
+	^ self readFromFileNamed: (self latestFileForName: aName)
 ]
 
 { #category : #adding }
@@ -110,6 +123,20 @@ DvWorkScope >> asRoassalVisualization [
 	^ DvRsWorkScope new model: self
 ]
 
+{ #category : #accessing }
+DvWorkScope >> baseForFilename [
+
+	^ String streamContents: [ :ws | 
+		  | now |
+		  now := DateAndTime now.
+		  ws << self name.
+		  ws << '_'.
+		  now printYMDOn: ws.
+		  ws << '_'.
+		  now printHMSWithDashesOn: ws.
+		  ws << '.phxjson' ]
+]
+
 { #category : #adding }
 DvWorkScope >> groupPackages: aBlock as: aName [ 
 
@@ -117,6 +144,18 @@ DvWorkScope >> groupPackages: aBlock as: aName [
 	pg := self packageGroupNamedOrCreate: aName. 
 	pg packages addAll: (self packages select: aBlock).
 	
+]
+
+{ #category : #accessing }
+DvWorkScope >> name [
+
+	^ name
+]
+
+{ #category : #accessing }
+DvWorkScope >> name: anObject [
+
+	name := anObject
 ]
 
 { #category : #adding }
@@ -180,4 +219,12 @@ DvWorkScope >> persistToClass: aClass [
 	aClass class compile: 'json
 	
 	^''' ,  self asPhxJsonString , '''' classified: 'persistence'
+]
+
+{ #category : #accessing }
+DvWorkScope >> saveAsPhxJsonFile [
+
+	| ws |
+	ws := self baseForFilename asFileReference writeStream.
+	[ ws << self asPhxJsonString ] ensure: [ ws close ]
 ]
