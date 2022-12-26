@@ -14,10 +14,17 @@ Class {
 { #category : #examples }
 DvRsWorkScope class >> example1 [
 
-	| vis |
-	vis := DvWorkScope example1 asRoassalVisualization. 
-	vis build canvas open.
-	vis inspect.
+	"
+self example1
+"
+
+	| vis c window |
+	vis := DvWorkScope example1 asRoassalVisualization.
+	c := vis build canvas.
+	window := c openWithTitle: 'Dependencies of BLA BLA'.
+	window extent: 2000 @ 1300.
+	c zoomToFit
+	"	vis inspect."
 ]
 
 { #category : #build }
