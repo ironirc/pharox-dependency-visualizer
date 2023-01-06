@@ -10,6 +10,17 @@ DvPackage >> addYourselfToScope: aScope [
 	aScope addPackage: self
 ]
 
+{ #category : #accessing }
+DvPackage >> computePackageGroupsYouDependOn [
+
+	| all |
+	all := Set new.
+	self scope packageGroups do: [ :pg | 
+		self packagesYouDependOn do: [ :myDepPckg | 
+			(pg packages includes: myDepPckg) ifTrue: [ all add: pg ] ] ].
+	^ all asOrderedCollection
+]
+
 { #category : #printing }
 DvPackage >> computePackagesDependingOnYou [
 
@@ -28,12 +39,6 @@ DvPackage >> computePackagesYouDependOn [
 DvPackage >> packagesDependingOnYou [
 
 	^ self computePackagesDependingOnYou
-]
-
-{ #category : #accessing }
-DvPackage >> packagesYouDependOn [
-
-	^ self computePackagesYouDependOn
 ]
 
 { #category : #'many relations' }

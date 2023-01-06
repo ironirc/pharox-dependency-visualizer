@@ -2,13 +2,14 @@ Class {
 	#name : #DvHorizontalTreeLayout,
 	#superclass : #RSAbstractHorizontalTreeLayout,
 	#instVars : [
-		'layers'
+		'layers',
+		'elementsToBeLayedOut'
 	],
 	#category : #'Phx-Dependency-Visualizer-visualisation common'
 }
 
 { #category : #'private - hook' }
-DvHorizontalTreeLayout >> childrenFor: aNode [
+DvHorizontalTreeLayout >> childrenFor_obsolete: aNode [
 
 	| all |
 	all := super childrenFor: aNode.
@@ -19,49 +20,44 @@ DvHorizontalTreeLayout >> childrenFor: aNode [
 ]
 
 { #category : #'private - hook' }
-DvHorizontalTreeLayout >> computeChildrenFor: aNode [
-	^ self childrenFor: aNode except: alreadyLayoutedNodes
-]
-
-{ #category : #'private - hook' }
-DvHorizontalTreeLayout >> distributeChildrenInLayers: elements [
+DvHorizontalTreeLayout >> distributeChildrenInLayers: dummy [
 
 	| nextLayer |
-	nextLayer := Set new.
-	elements do: [ :el | nextLayer addAll: (self childrenFor: el) ].
+	nextLayer := self nextChildrenForWhichDependenciesArePresent 
+		             ifEmpty: [ self nextChildrenToBreakTheCycle ].
+
 	nextLayer ifEmpty: [ ^ self ].
-	nextLayer := nextLayer asOrderedCollection.
-	nodesByLayer add: nextLayer asOrderedCollection.
-	self distributeChildrenInLayers: elements , nextLayer
+
+	"	self nodesAlreadyInLayers do: [ :el | nextLayer addAll: (self childrenFor: el) ].
+	nextLayer ifEmpty: [ 
+		| unusedEls elWithMaxOuts |
+		unusedEls := alreadyInLayers reject: [ :el | 
+			             self isAlreadyInAPreviousLayer: el ].
+		unusedEls ifEmpty: [ ^ self ].
+		elWithMaxOuts := (unusedEls sortedOnPaths:
+			                  #( #( outgoingLines size ) )) last.
+		nextLayer add: elWithMaxOuts ].
+	nextLayer := nextLayer asOrderedCollection."
+	nodesByLayer add: nextLayer.
+	self distributeChildrenInLayers: nil
 ]
 
 { #category : #'private - hook' }
 DvHorizontalTreeLayout >> doExecute: elements [
 
-	| unConnectedNodes rootNodes leftOvers |
-	alreadyLayoutedNodes := OrderedCollection new.
-	rootNodes := self rootNodesFor: elements.
-	self validateCachedParents.
+	| rootNodes leftOvers |
+	elementsToBeLayedOut := elements.
 	nodesByLayer := OrderedCollection new.
+	rootNodes := self rootNodesFor: elements.
+	nodesByLayer add: rootNodes.
 
-	unConnectedNodes := rootNodes select: [ :each | 
-		                    each connectedLines isEmpty ].
-	nodesByLayer add: unConnectedNodes.
-	nodesByLayer add:
-		(rootNodes reject: [ :e | unConnectedNodes includes: e ]).
-	self distributeChildrenInLayers: rootNodes.
-	"	self nodeCountContainedInLayers inspect."
+
+	self distributeChildrenInLayers: nil.
+	"leftOvers are probably circular chains?"
 	leftOvers := elements reject: [ :e | 
 		             self isAlreadyInAPreviousLayer: e ].
 	leftOvers ifNotEmpty: [ nodesByLayer add: leftOvers ].
-
 	self layoutLayers
-	"	self
-		layout: rootNodes
-		atPoint: self leftGap @ self topGap
-		atLayer: 1.
-	self isLayered ifTrue: [
-		self rearrangeByLayers: elements ]"
 ]
 
 { #category : #'private - hook' }
@@ -84,37 +80,25 @@ DvHorizontalTreeLayout >> isAlreadyInAPreviousLayer: aNode [
 ]
 
 { #category : #'private - hook' }
-DvHorizontalTreeLayout >> layout: aNodeCollection atPoint: aPoint atLayer: aNumber [
-	| treeSize childrenPosition x y middleOfTree |
-	aNodeCollection isEmpty ifTrue: [ ^ 0 ].
-	x := aPoint x.
-	y := aPoint y.
-	alreadyLayoutedNodes addAll: aNodeCollection.
-	self atLayer: aNumber add: aNodeCollection.
-	alreadyLayoutedNodes copy do: [ :each | 
-		childrenPosition := x + each width + self horizontalGap.
-		treeSize := each height
-			max: (self layout: (self computeChildrenFor: each) atPoint: childrenPosition @ y atLayer: aNumber + 1).
-		middleOfTree := y + (treeSize / 2.0) - (each height / 2.0).
-		translator translateTopLeftOf: each to: (x @ middleOfTree).
-		y := y + treeSize + self verticalGap.
-		self step ].
-	^ y - aPoint y - self verticalGap
-]
-
-{ #category : #'private - hook' }
 DvHorizontalTreeLayout >> layoutLayers [
 
-	| maxLayerHeight |
+	| maxLayerHeight layerX |
 	maxLayerHeight := self maxLayerHeight.
+	layerX := 0.
 	nodesByLayer keysAndValuesDo: [ :layerIdx :layer | 
-		| layerX layerSlotHeight |
-		layerX := layerIdx - 1 * 200.
-		layerSlotHeight := maxLayerHeight / layer size.
-		layer keysAndValuesDo: [ :idxOfNodeInLayer :each | 
-			translator
-				translateTopLeftOf: each
-				to: layerX @ (idxOfNodeInLayer * layerSlotHeight) ] ]
+		| shiftX |
+		shiftX := layerIdx = 1
+			          ifTrue: [ 0 ]
+			          ifFalse: [ 
+			          (RSGroup withAll: (nodesByLayer at: layerIdx - 1)) width
+			          + 50 ].
+		layerX := layerX + shiftX.
+
+		RSVerticalLineLayout new
+			alignCenter;
+			gapSize: 30;
+			on: layer.
+		layer do: [ :each | each translateBy: layerX @ 0 ] ]
 ]
 
 { #category : #'private - hook' }
@@ -126,10 +110,38 @@ DvHorizontalTreeLayout >> maxLayerHeight [
 ]
 
 { #category : #'private - hook' }
-DvHorizontalTreeLayout >> nodeCountContainedInLayers [
+DvHorizontalTreeLayout >> nextChildren [
+
+	| results |
+	results := Set new.
+	self nodesInLayers do: [ :each | 
+		results addAll: (self childrenFor: each) ].
+	results := results reject: [ :e | self isAlreadyInAPreviousLayer: e ].
+	^ results asOrderedCollection
+]
+
+{ #category : #'private - hook' }
+DvHorizontalTreeLayout >> nextChildrenForWhichDependenciesArePresent [
+
+	| results |
+	results := self nextChildren.
+	^ results select: [ :candidate | 
+		  candidate incomingLines allSatisfy: [ :cl | 
+			  self isAlreadyInAPreviousLayer: cl from ] ]
+]
+
+{ #category : #'private - hook' }
+DvHorizontalTreeLayout >> nextChildrenToBreakTheCycle [
+
+	^ self nextChildren ifNotEmpty: [ :results | 
+		  { (results sortedOnPaths: #( #( outgoingLines size ) )) last } ]
+]
+
+{ #category : #'private - hook' }
+DvHorizontalTreeLayout >> nodesInLayers [
 
 	| all |
 	all := OrderedCollection new.
 	nodesByLayer do: [ :layer | layer do: [ :n | all add: n ] ].
-	^ all size
+	^ all
 ]

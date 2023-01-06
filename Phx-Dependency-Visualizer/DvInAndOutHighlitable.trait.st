@@ -9,9 +9,15 @@ DvInAndOutHighlitable >> antAnimations [
 ]
 
 { #category : #highliting }
+DvInAndOutHighlitable >> conflictingHighliteColor [
+
+	^ Color orange darker darker
+]
+
+{ #category : #highliting }
 DvInAndOutHighlitable >> highlight: evt [
 
-	| box incomingLines outgoingLines incomingBoxes outgoingBoxes |
+	| box incomingLines outgoingLines incomingBoxes outgoingBoxes conflictingBoxes |
 	box := evt shape.
 	incomingLines := box incomingLines.
 	outgoingLines := box outgoingLines.
@@ -22,14 +28,22 @@ DvInAndOutHighlitable >> highlight: evt [
 		highlightLines: outgoingLines
 		withColor: self outgoingHighliteColor.
 	incomingBoxes := (incomingLines collect: #from) asOrderedCollection.
+	outgoingBoxes := (outgoingLines collect: #to) asOrderedCollection.
+	conflictingBoxes := incomingBoxes intersection: outgoingBoxes.
+	incomingBoxes := incomingBoxes difference: conflictingBoxes.
+	outgoingBoxes := outgoingBoxes difference: conflictingBoxes.
 	self
 		highlightBoxes: incomingBoxes
 		withColor: self incomingHighliteColor.
-	outgoingBoxes := (outgoingLines collect: #to) asOrderedCollection.
 	self
 		highlightBoxes: outgoingBoxes
 		withColor: self outgoingHighliteColor.
-	self canvas propertyAt: #highlightedBoxes put: incomingBoxes , outgoingBoxes.
+	self
+		highlightBoxes: conflictingBoxes
+		withColor: self conflictingHighliteColor.
+	self canvas
+		propertyAt: #highlightedBoxes
+		put: incomingBoxes , outgoingBoxes , conflictingBoxes.
 	self canvas
 		propertyAt: #highlightedLines
 		put: incomingLines , outgoingLines
@@ -112,7 +126,7 @@ DvInAndOutHighlitable >> outgoingHighliteColor [
 DvInAndOutHighlitable >> shadowFor: box [
 	^ RSBox new
 		position: box positionInCanvas;
-		extent: box extent + 3;
+		extent: box extent + 7;
 		cornerRadius: 3;
 		yourself
 ]

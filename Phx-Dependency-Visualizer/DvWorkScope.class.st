@@ -31,6 +31,7 @@ self example1
 	names do: [ :n | wsc addPackageNamed: n ].
 	wsc groupPackages: [:p |  '*comp23*' match: p name ] as: 'Comp23'.
 	wsc groupPackages: [:p |  '*Phx-Pj-Core*' match: p name ] as: 'Phx-Pj-Core'.
+	wsc groupPackages: [:p |  '*Phx-Crm*' match: p name ] as: 'Phx-Crm'.	
 	^ wsc
 ]
 
@@ -89,9 +90,10 @@ DvWorkScope >> addPackageGroup: aPackageGroup [
 { #category : #adding }
 DvWorkScope >> addPackageGroupNamed: aName [
 
-	| p |
-	p := DvPackageGroup newNamed: aName.
-	p scope: self
+	| p pg |
+	pg := DvPackageGroup newNamed: aName.
+	pg scope: self.
+	^ pg
 ]
 
 { #category : #adding }
@@ -146,6 +148,13 @@ DvWorkScope >> groupPackages: aBlock as: aName [
 	
 ]
 
+{ #category : #adding }
+DvWorkScope >> groupsAndPackagesDo: aBlock [  
+
+	self packageGroups do: [ :pg | aBlock value: pg ].
+	self unGroupedPackages do: [:p | aBlock value: p   ]
+]
+
 { #category : #accessing }
 DvWorkScope >> name [
 
@@ -159,18 +168,19 @@ DvWorkScope >> name: anObject [
 ]
 
 { #category : #adding }
-DvWorkScope >> packageGroupNamed: aName isAbsentPut: aBlock [
+DvWorkScope >> packageGroupNamed: aName ifAbsent: aBlock [
 
 	^ self packageGroups
 		  detect: [ :pg | pg name = aName ]
-		  ifNone: [ self packageGroups add: aBlock value ]
+		  ifNone: [ aBlock value ]
 ]
 
 { #category : #adding }
 DvWorkScope >> packageGroupNamedOrCreate: aName [
 
-	^self packageGroupNamed: aName isAbsentPut: [ DvPackageGroup newNamed: aName  ]
-	
+	^ self
+		  packageGroupNamed: aName
+		  ifAbsent: [ self addPackageGroupNamed: aName ]
 ]
 
 { #category : #accessing }
@@ -227,4 +237,11 @@ DvWorkScope >> saveAsPhxJsonFile [
 	| ws |
 	ws := self baseForFilename asFileReference writeStream.
 	[ ws << self asPhxJsonString ] ensure: [ ws close ]
+]
+
+{ #category : #accessing }
+DvWorkScope >> unGroupedPackages [
+
+	^ self packages reject: [ :p | 
+		  self packageGroups anySatisfy: [ :pg | pg packages includes: p ] ]
 ]

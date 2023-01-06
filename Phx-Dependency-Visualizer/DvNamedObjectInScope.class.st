@@ -3,7 +3,9 @@ Class {
 	#superclass : #DvAbstractObject,
 	#instVars : [
 		'scope',
-		'name'
+		'name',
+		'packagesYouDependOn',
+		'packageGroupsYouDependOn'
 	],
 	#category : #'Phx-Dependency-Visualizer-model'
 }
@@ -20,6 +22,22 @@ DvNamedObjectInScope >> name: anObject [
 	name := anObject.
 	self changed: #name 
 	
+]
+
+{ #category : #accessing }
+DvNamedObjectInScope >> packageGroupsYouDependOn [
+
+	packageGroupsYouDependOn ifNil: [ 
+		packageGroupsYouDependOn := self computePackageGroupsYouDependOn ].
+	^ packageGroupsYouDependOn
+]
+
+{ #category : #accessing }
+DvNamedObjectInScope >> packagesYouDependOn [
+
+	packagesYouDependOn ifNil: [ 
+		packagesYouDependOn := self computePackagesYouDependOn ].
+	^ packagesYouDependOn
 ]
 
 { #category : #printing }

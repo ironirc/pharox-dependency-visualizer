@@ -19,6 +19,31 @@ DvPackageGroup >> addYourselfToScope: aScope [
 	aScope addPackageGroup: self
 ]
 
+{ #category : #'accessing derived' }
+DvPackageGroup >> computePackageGroupsYouDependOn [
+
+	| all |
+	all := Set new.
+	self scope packageGroups do: [ :otherPg | 
+		self packagesYouDependOn anySatisfy: [ :myDepPckg | 
+			otherPg packages includes: myDepPckg ] ].
+	^ all asOrderedCollection
+]
+
+{ #category : #'accessing derived' }
+DvPackageGroup >> computePackagesYouDependOn [
+
+	| all |
+	all := Set new.
+	self packages do: [ :p | all addAll: p packagesYouDependOn ].
+	^ all asOrderedCollection
+]
+
+{ #category : #accessing }
+DvPackageGroup >> packageGroups [
+	^{}
+]
+
 { #category : #accessing }
 DvPackageGroup >> packages [
 
@@ -30,4 +55,9 @@ DvPackageGroup >> packages [
 DvPackageGroup >> removeYourselfFromScope: aScope [  
 
 	aScope removePackageGroup: self
+]
+
+{ #category : #accessing }
+DvPackageGroup >> unGroupedPackages [
+	^self packages
 ]
