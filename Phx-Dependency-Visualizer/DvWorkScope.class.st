@@ -17,7 +17,7 @@ Class {
 { #category : #examples }
 DvWorkScope class >> example1 [
 
-"
+	"
 self example1
 "
 
@@ -29,9 +29,35 @@ self example1
 	wsc := self new.
 	wsc name: 'PhxAndOthers'.
 	names do: [ :n | wsc addPackageNamed: n ].
-	wsc groupPackages: [:p |  '*comp23*' match: p name ] as: 'Comp23'.
-	wsc groupPackages: [:p |  '*Phx-Pj-Core*' match: p name ] as: 'Phx-Pj-Core'.
-	wsc groupPackages: [:p |  '*Phx-Crm*' match: p name ] as: 'Phx-Crm'.	
+	wsc
+		groupPackages: [ :p | 
+			('*comp23*' match: p name) or: [ 
+				{ 'Phx-Pj-P5-CatchGreens' } anySatisfy: [ :e | e = p name ] ] ]
+		as: 'Comp23'.
+	wsc
+		groupPackages: [ :p | '*Phx-Pj-Core*' match: p name ]
+		as: 'Phx-Pj-Core'.
+	wsc
+		groupPackages: [ :p | 
+			('*Phx-Crm*' match: p name) or: [ 
+				{ 'Phx-Seaside-Quasar-Obsolete' } anySatisfy: [ :e | e = p name ] ] ]
+		as: 'Phx-Crm'.
+	wsc
+		groupPackages: [ :p | 
+			{ 'Phx-Pj-Cordova'. 'Phx-Pj-Vue'. 'Phx-Pj-Nectar-Api'.
+			'Phx-Pj-Cordova-Experiments'. 'Phx-Pj-NodeJs-Reporting-Experiments'.
+			'Phx-Pj-Quasar-Nectar' } anySatisfy: [ :e | e = p name ] ]
+		as: 'Phx-Pj-Quasar-Nectar'.
+	wsc
+		groupPackages: [ :p | 
+			{ 'Phx-Pj-Proxy'. 'Phx-Pj-Comp21'. 'Phx-Pj-Comp22' } anySatisfy: [ 
+				:e | e = p name ] ]
+		as: 'Phx-Pj-Comp21-Comp22'.
+	wsc
+		groupPackages: [ :p | 
+			{ 'Phx-Support'. 'Phx-Pharo-Extensions'. 'Phx-Pharo-Overrides'.
+			'Phx-Pharo10-Overrides' } anySatisfy: [ :e | e = p name ] ]
+		as: 'Phx-Basics'.
 	^ wsc
 ]
 
