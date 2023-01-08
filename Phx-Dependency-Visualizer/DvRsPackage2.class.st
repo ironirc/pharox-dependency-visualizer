@@ -1,6 +1,9 @@
 Class {
 	#name : #DvRsPackage2,
 	#superclass : #PhxRsComposite,
+	#instVars : [
+		'box'
+	],
 	#category : #'Phx-Dependency-Visualizer-visualisation gen2'
 }
 
@@ -12,13 +15,18 @@ DvRsPackage2 >> addToManyRelationOnParent [
 { #category : #building }
 DvRsPackage2 >> build [
 
-	| label box |
+	| label |
 	label := RSLabel new
 		         text: model name;
 		         color: Color black;
 		         model: #name;
 		         yourself.
+	border := RSBorder new
+		          color: (Color gray alpha: 0.5);
+		          yourself.
 	box := RSBox new
+		       border: border;
+		       color: Color white;
 		       extent: label extent + 10;
 		       cornerRadius: 3;
 		       yourself.
@@ -45,8 +53,15 @@ DvRsPackage2 >> handleAnnouncementAspectChanged: a [
 
 { #category : #menu }
 DvRsPackage2 >> handleBrowseEvent: evt [
-	self top stopAndRemoveAllAnimations.
+	self  stopAndRemoveAllAnimations.
 	(RPackageOrganizer default packageNamed: self model name) browse
+
+]
+
+{ #category : #menu }
+DvRsPackage2 >> handleInspectEvent: evt [
+	self  stopAndRemoveAllAnimations.
+	evt shape inspect
 
 ]
 
@@ -64,8 +79,15 @@ DvRsPackage2 >> initialize [
 ]
 
 { #category : #actions }
-DvRsPackage2 >> leftClick: aRSMouseLeftClick [ 
-	"self shouldBeImplemented."
+DvRsPackage2 >> leftClick: evt [
+
+	| isSelected |
+	isSelected := self propertyAt: #isSelected ifAbsent: [ false ].
+	isSelected := isSelected not.
+	self propertyAt: #isSelected put: isSelected.
+	isSelected
+		ifTrue: [ box color: Color yellow ]
+		ifFalse: [ box color: Color white ]
 ]
 
 { #category : #printing }
@@ -103,6 +125,11 @@ DvRsPackage2 >> showMenu: evt [
 		add: 'open dependency analyzer'
 		target: self
 		selector: #handleShowDependencyAnalyserEvent:
+		argument: evt.
+		menu
+		add: 'inspect'
+		target: self
+		selector: #handleInspectEvent:
 		argument: evt.
 	^ menu popUpInWorld
 ]
