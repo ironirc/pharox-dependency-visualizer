@@ -25,8 +25,9 @@ DvPackageGroup >> computePackageGroupsYouDependOn [
 	| all |
 	all := Set new.
 	self scope packageGroups do: [ :otherPg | 
-		self packagesYouDependOn anySatisfy: [ :myDepPckg | 
-			otherPg packages includes: myDepPckg ] ].
+		(self packagesYouDependOn anySatisfy: [ :myDepPckg | 
+			 otherPg packages includes: myDepPckg ]) ifTrue: [ 
+			all add: otherPg ] ].
 	^ all asOrderedCollection
 ]
 
