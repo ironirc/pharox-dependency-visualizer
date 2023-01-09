@@ -87,7 +87,8 @@ DvRsPackage2 >> leftClick: evt [
 	self propertyAt: #isSelected put: isSelected.
 	isSelected
 		ifTrue: [ box color: Color yellow ]
-		ifFalse: [ box color: Color white ]
+		ifFalse: [ box color: Color white ].
+	self signalUpdate
 ]
 
 { #category : #printing }
