@@ -2,7 +2,8 @@ Class {
 	#name : #DvRsPackageGroup,
 	#superclass : #PhxRsComposite,
 	#instVars : [
-		'box'
+		'box',
+		'label'
 	],
 	#category : #'Phx-Dependency-Visualizer-visualisation'
 }
@@ -30,7 +31,6 @@ DvRsPackageGroup >> adjustBox: aBox on: someShapes [
 { #category : #building }
 DvRsPackageGroup >> build [
 
-	| label |
 	self buildPackages.
 	RSGridLayout on: self nodes.
 	label := RSLabel new
@@ -74,6 +74,17 @@ DvRsPackageGroup >> handleInspectEvent: evt [
 
 ]
 
+{ #category : #actions }
+DvRsPackageGroup >> handleRename [
+
+	| aName |
+	aName := UIManager default
+		         request: 'Enter a new name'
+		         initialAnswer: self model name.
+	aName ifNil: [ ^ self ].
+	self model name: aName
+]
+
 { #category : #building }
 DvRsPackageGroup >> leftClick: evt [
 
@@ -103,10 +114,31 @@ DvRsPackageGroup >> showMenu: evt [
 		target: self
 		selector: #handleShowDependencyAnalyserEvent:
 		argument: evt.
-		menu
+	menu
 		add: 'inspect'
 		target: self
 		selector: #handleInspectEvent:
 		argument: evt.
+	menu
+		add: 'rename'
+		target: self
+		selector: #handleRename.
 	^ menu popUpInWorld
+]
+
+{ #category : #accessing }
+DvRsPackageGroup >> update: aSymbol [
+
+	super update: aSymbol.
+	aSymbol == #name ifTrue: [ 
+		self updateName.
+		^ self ]
+]
+
+{ #category : #accessing }
+DvRsPackageGroup >> updateName [
+
+	label text: self model name.
+	label signalUpdate.
+	
 ]

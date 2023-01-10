@@ -17,6 +17,6 @@ DvAbstractObject class >> newNamed: aName [
 DvAbstractObject >> changed: aSymbol [
 
 	super changed: aSymbol.
-	self announcer announce:
-		(DvAnnouncementAspectChanged onModel: self aspect: aSymbol)
+	"self announcer announce:
+		(DvAnnouncementAspectChanged onModel: self aspect: aSymbol)"
 ]

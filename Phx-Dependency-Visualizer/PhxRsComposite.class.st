@@ -13,3 +13,11 @@ PhxRsComposite class >> newUnder: anObject [
 	object parent: anObject.
 	^ object
 ]
+
+{ #category : #accessing }
+PhxRsComposite >> model: anObject [
+
+	model ifNotNil: [ self removeDependent: self ].
+	anObject ifNotNil: [ anObject addDependent: self ].
+	model := anObject
+]
