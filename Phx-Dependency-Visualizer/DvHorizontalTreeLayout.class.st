@@ -134,7 +134,8 @@ DvHorizontalTreeLayout >> nextChildrenForWhichDependenciesArePresent [
 DvHorizontalTreeLayout >> nextChildrenToBreakTheCycle [
 
 	^ self nextChildren ifNotEmpty: [ :results | 
-		  { (results sortedOnPaths: #( #( outgoingLines size ) )) last } ]
+		  { (results sorted: [ :a :b | 
+			   a outgoingLines size <= b outgoingLines size ]) last } ]
 ]
 
 { #category : #'private - hook' }

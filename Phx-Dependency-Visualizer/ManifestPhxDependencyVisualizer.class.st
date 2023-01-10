@@ -6,8 +6,3 @@ Class {
 	#superclass : #PackageManifest,
 	#category : #'Phx-Dependency-Visualizer-Manifest'
 }
-
-{ #category : #'meta-data - dependency analyser' }
-ManifestPhxDependencyVisualizer class >> manuallyResolvedDependencies [
-	^ #(#'Phx-Pharo-Extensions')
-]
