@@ -69,10 +69,14 @@ DvWorkScope class >> example1Persist [
 
 { #category : #'as yet unclassified' }
 DvWorkScope class >> latestFileForName: aName [
-"
+
+	"
 self latestFileForName: 'PhxAndOthers'
 "
-	^ ('.' asFileReference filesMatching: aName , '*.phxjson') sorted lastOrNil 
+
+	^ ('.' asFileReference filesMatching: aName , '*.phxjson') sorted
+		  ifEmpty: [ nil ]
+		  ifNotEmpty: [ :coll | coll first ]
 ]
 
 { #category : #'as yet unclassified' }
