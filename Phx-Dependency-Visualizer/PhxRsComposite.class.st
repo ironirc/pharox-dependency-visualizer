@@ -3,7 +3,7 @@ Class {
 	#superclass : #RSComposite,
 	#traits : 'DvInAndOutHighlitable',
 	#classTraits : 'DvInAndOutHighlitable classTrait',
-	#category : #'Phx-Dependency-Visualizer-visualisation gen2'
+	#category : #'Phx-Dependency-Visualizer-visualisation'
 }
 
 { #category : #'instance creation' }

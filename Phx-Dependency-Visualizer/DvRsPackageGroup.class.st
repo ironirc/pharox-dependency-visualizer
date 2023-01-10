@@ -1,33 +1,38 @@
 Class {
 	#name : #DvRsPackageGroup,
-	#superclass : #DvRsObject,
-	#category : #'Phx-Dependency-Visualizer-visualisation gen2'
+	#superclass : #PhxRsComposite,
+	#instVars : [
+		'box'
+	],
+	#category : #'Phx-Dependency-Visualizer-visualisation'
 }
 
-{ #category : #private }
-DvRsPackageGroup >> addToManyRelationOnParent [
+{ #category : #build }
+DvRsPackageGroup >> addPackage: aPackage [
 
-	self parent rsPackageGroups add: self
+	| rsPackage |
+	rsPackage := DvRsPackage new.
+	rsPackage model: aPackage.
+	rsPackage build.
+	self add: rsPackage
 ]
 
-{ #category : #building }
-DvRsPackageGroup >> adjustBox: box on: someShapes [
+{ #category : #build }
+DvRsPackageGroup >> adjustBox: aBox on: someShapes [
 
 	| rect |
 	rect := someShapes encompassingRectangle.
-	box
-		extent: rect extent + (10 @ 20);
+	aBox
+		extent: rect extent + (10 @ 10);
 		position: rect floatCenter
 ]
 
 { #category : #building }
 DvRsPackageGroup >> build [
 
-	| pckgs compos label border box |
-	self mainShape ifNotNil: [ 
-		^ self error: 'attempt to build mainShape twice' ].
-	pckgs := RSGroup withAll: self containedPackageShapes.
-	RSGridLayout on: pckgs.
+	| label |
+	self buildPackages.
+	RSGridLayout on: self nodes.
 	label := RSLabel new
 		         text: model name;
 		         color: Color black;
@@ -35,72 +40,73 @@ DvRsPackageGroup >> build [
 	border := RSBorder new
 		          color: (Color gray alpha: 0.5);
 		          yourself.
-	box := RSBox new noPaint
+	box := RSBox new
 		       extent: label extent + 10;
+		       color: Color white;
 		       border: border;
 		       cornerRadius: 3;
-		       yourself.
-	self adjustBox: box on: pckgs.
-	compos := ({ 
-		          box.
-		          label } , pckgs)  asShapeFor: model.
-	"compos @ (RSPopup text: [ :neuron | neuron printStatisticDefinitions ])."
-	
-	compos @ (RSDraggable new noValidateChildrenEvents).
-	compos when: RSMouseRightClick send: #showMenu: to: self.
-	compos when: RSMouseLeftClick send: #leftClick: to: self.
-	self mainShape: compos.
-	self canvas add: compos
+		       yourself. "noPaint"
+	RSLocation new
+		offset: -5;
+		above;
+		center;
+		stick: label on: self nodes.
+	self add: label.
+	self adjustBox: box on: self nodes.
+	self add: box.
+	box pushBack.
+	self adjustToChildren.
+	self @ RSDraggable new noValidateChildrenEvents.
+	self when: RSMouseLeftClick send: #leftClick: to: self.
+	self when: RSMouseRightClick send: #showMenu: to: self
+]
+
+{ #category : #build }
+DvRsPackageGroup >> buildPackages [
+
+	self model unGroupedPackages do: [ :p | self addPackage: p ]
 ]
 
 { #category : #building }
-DvRsPackageGroup >> containedPackageShapes [
+DvRsPackageGroup >> handleInspectEvent: evt [
+	self  stopAndRemoveAllAnimations.
+	evt shape inspect
 
-	^ self containedPackages collect: #mainShape
 ]
 
 { #category : #building }
-DvRsPackageGroup >> containedPackages [
+DvRsPackageGroup >> leftClick: evt [
 
-	^ self model packages collect: [ :eachModelPckg | 
-		  self parent rsPackages detect: [ :eachVisPckg | 
-			  eachVisPckg model = eachModelPckg ] ]
+	| isSelected |
+	isSelected := self propertyAt: #isSelected ifAbsent: [ false ].
+	isSelected := isSelected not.
+	self propertyAt: #isSelected put: isSelected.
+	isSelected
+		ifTrue: [ box color: Color yellow ]
+		ifFalse: [ box color: Color white ].
+	self signalUpdate
 ]
 
-{ #category : #'announcement handling' }
-DvRsPackageGroup >> handleAnnouncementAspectChanged: a [
-	
-]
+{ #category : #building }
+DvRsPackageGroup >> showMenu: evt [
 
-{ #category : #'initialize-release' }
-DvRsPackageGroup >> initialize [
-	super initialize.
-
-]
-
-{ #category : #printing }
-DvRsPackageGroup >> printOn: ws [
-
-	super printOn: ws.
-	ws << ' ('.
-	ws << self model name. 
-	ws << ')'
-]
-
-{ #category : #private }
-DvRsPackageGroup >> removeFromManyRelationOnParent [
-	self parent rsPackageGroups remove: self
-]
-
-{ #category : #'setUp-tearDown' }
-DvRsPackageGroup >> setupListenersToModel [
-	super setupListenersToModel.
-
-]
-
-{ #category : #'setUp-tearDown' }
-DvRsPackageGroup >> tearDown [
-	self mainShape ifNotNil: [ :ms | self canvas removeShape: ms ].
-	self parent: nil.
-	self model: nil
+	| menu |
+	menu := MenuMorph new.
+	menu
+		add: 'browse'
+		target: self
+		selector: #handleBrowseEvent:
+		argument: evt.
+	menu addLine.
+	menu
+		add: 'open dependency analyzer'
+		target: self
+		selector: #handleShowDependencyAnalyserEvent:
+		argument: evt.
+		menu
+		add: 'inspect'
+		target: self
+		selector: #handleInspectEvent:
+		argument: evt.
+	^ menu popUpInWorld
 ]

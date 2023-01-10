@@ -5,7 +5,7 @@ Class {
 		'layers',
 		'elementsToBeLayedOut'
 	],
-	#category : #'Phx-Dependency-Visualizer-visualisation common'
+	#category : #'Phx-Dependency-Visualizer-visualisation'
 }
 
 { #category : #'private - hook' }

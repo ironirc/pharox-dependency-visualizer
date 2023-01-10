@@ -1,38 +1,36 @@
 Class {
 	#name : #DvRsPackage,
-	#superclass : #DvRsObject,
-	#category : #'Phx-Dependency-Visualizer-visualisation gen2'
+	#superclass : #PhxRsComposite,
+	#instVars : [
+		'box'
+	],
+	#category : #'Phx-Dependency-Visualizer-visualisation'
 }
-
-{ #category : #private }
-DvRsPackage >> addToManyRelationOnParent [
-	self parent rsPackages add: self
-]
 
 { #category : #building }
 DvRsPackage >> build [
 
-	| compos label box |
-	self mainShape ifNotNil: [ 
-		^ self error: 'attempt to build mainShape twice' ].
+	| label |
 	label := RSLabel new
 		         text: model name;
 		         color: Color black;
-					model: #name;
+		         model: #name;
 		         yourself.
+	border := RSBorder new
+		          color: (Color gray alpha: 0.5);
+		          yourself.
 	box := RSBox new
+		       border: border;
+		       color: Color white;
 		       extent: label extent + 10;
 		       cornerRadius: 3;
 		       yourself.
-	compos := { 
-		          box.
-		          label } asShapeFor: model.
-	"compos @ (RSPopup text: [ :neuron | neuron printStatisticDefinitions ])."
-	compos draggable.
-	compos when: RSMouseRightClick send: #showMenu: to: self.
-	compos when: RSMouseLeftClick send: #leftClick: to: self.
-	self mainShape: compos.
-	self canvas add: compos
+	self add: box.
+	self add: label.
+	self draggable.
+	self when: RSMouseRightClick send: #showMenu: to: self.
+	self when: RSMouseLeftClick send: #leftClick: to: self.
+	self adjustToChildren
 ]
 
 { #category : #'announcement handling' }
@@ -50,14 +48,21 @@ DvRsPackage >> handleAnnouncementAspectChanged: a [
 
 { #category : #menu }
 DvRsPackage >> handleBrowseEvent: evt [
-	self top stopAndRemoveAllAnimations.
+	self  stopAndRemoveAllAnimations.
 	(RPackageOrganizer default packageNamed: self model name) browse
 
 ]
 
 { #category : #menu }
+DvRsPackage >> handleInspectEvent: evt [
+	self  stopAndRemoveAllAnimations.
+	evt shape inspect
+
+]
+
+{ #category : #menu }
 DvRsPackage >> handleShowDependencyAnalyserEvent: anEvent [
-	self top stopAndRemoveAllAnimations.
+	self stopAndRemoveAllAnimations.
 	(DAPackageDependenciesPresenter onPackagesNamed:
 		 { self model name }) open
 ]
@@ -68,6 +73,19 @@ DvRsPackage >> initialize [
 
 ]
 
+{ #category : #actions }
+DvRsPackage >> leftClick: evt [
+
+	| isSelected |
+	isSelected := self propertyAt: #isSelected ifAbsent: [ false ].
+	isSelected := isSelected not.
+	self propertyAt: #isSelected put: isSelected.
+	isSelected
+		ifTrue: [ box color: Color yellow ]
+		ifFalse: [ box color: Color white ].
+	self signalUpdate
+]
+
 { #category : #printing }
 DvRsPackage >> printOn: ws [
 
@@ -75,11 +93,6 @@ DvRsPackage >> printOn: ws [
 	ws << ' ('.
 	ws << self model name. 
 	ws << ')'
-]
-
-{ #category : #private }
-DvRsPackage >> removeFromManyRelationOnParent [
-	self parent rsPackages remove: self
 ]
 
 { #category : #'setUp-tearDown' }
@@ -103,6 +116,11 @@ DvRsPackage >> showMenu: evt [
 		add: 'open dependency analyzer'
 		target: self
 		selector: #handleShowDependencyAnalyserEvent:
+		argument: evt.
+		menu
+		add: 'inspect'
+		target: self
+		selector: #handleInspectEvent:
 		argument: evt.
 	^ menu popUpInWorld
 ]

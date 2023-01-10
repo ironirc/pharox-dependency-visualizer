@@ -138,20 +138,6 @@ DvWorkScope >> allPackageNamesDependedOnByPackageNamed: aPackageName [
 ]
 
 { #category : #accessing }
-DvWorkScope >> allPhxPackagesDependingOn: aPackageName [
-
-	| pNames |
-	pNames := self dependentPackageNamesOfPackageNamed: aPackageName.
-	^ self packages select: [ :e | pNames includes: e name ]
-]
-
-{ #category : #roassal }
-DvWorkScope >> asRoassalVisualization [
-
-	^ DvRsWorkScope new model: self
-]
-
-{ #category : #accessing }
 DvWorkScope >> baseForFilename [
 
 	^ String streamContents: [ :ws | 

@@ -1,6 +1,6 @@
 Trait {
 	#name : #DvInAndOutHighlitable,
-	#category : #'Phx-Dependency-Visualizer-visualisation common'
+	#category : #'Phx-Dependency-Visualizer-visualisation'
 }
 
 { #category : #highliting }
