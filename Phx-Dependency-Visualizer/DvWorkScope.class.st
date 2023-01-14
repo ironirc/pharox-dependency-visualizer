@@ -67,6 +67,24 @@ DvWorkScope class >> example1Persist [
 	self example1 saveAsPhxJsonFile
 ]
 
+{ #category : #examples }
+DvWorkScope class >> exampleRoassalPackages [
+
+	"
+self exampleRoassalPackages
+"
+
+	| patterns names wsc |
+	patterns := { 'Roassal*' }.
+	names := ((RPackageOrganizer default packages select: [ :p | 
+		           patterns anySatisfy: [ :patt | patt match: p name ] ]) 
+		          collect: #name) sorted.
+	wsc := self new.
+	wsc name: 'Roassal packages'.
+	names do: [ :n | wsc addPackageNamed: n ].
+	^ wsc
+]
+
 { #category : #'as yet unclassified' }
 DvWorkScope class >> latestFileForName: aName [
 

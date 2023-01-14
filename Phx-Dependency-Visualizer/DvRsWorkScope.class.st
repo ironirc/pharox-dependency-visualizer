@@ -35,6 +35,22 @@ self example1
 	"	c inspect."
 ]
 
+{ #category : #examples }
+DvRsWorkScope class >> exampleRoassalPackages [
+
+	<script>
+	| vis c window |
+	c := RSCanvas new.
+	c addInteraction: (RSCanvasController new
+			 in: [ :i | i configuration useBasicZoom ];
+			 yourself).
+	vis := DvRsWorkScope new model: DvWorkScope exampleRoassalPackages.
+	vis build.
+	c add: vis.
+	window := c openWithTitle: 'Dependencies inside Roassal'.
+	window extent: 2000 @ 1300
+]
+
 { #category : #private }
 DvRsWorkScope >> addToManyRelationOnParent [
 	"no parent, no need"
