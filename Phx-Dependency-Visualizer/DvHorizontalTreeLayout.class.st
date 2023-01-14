@@ -9,37 +9,44 @@ Class {
 }
 
 { #category : #'private - hook' }
-DvHorizontalTreeLayout >> childrenFor_obsolete: aNode [
+DvHorizontalTreeLayout >> distributeChildrenInLayers [
 
-	| all |
-	all := super childrenFor: aNode.
-	all := all reject: [ :e | self isAlreadyInAPreviousLayer: e ].
-	^ all select: [ :e | 
-		  e connectedLines allSatisfy: [ :cl | 
-			  cl to ~= e or: [ self isAlreadyInAPreviousLayer: cl from ] ] ]
-]
+	| candidates newLayer |
+	candidates := self nextChildren.
+	candidates ifEmpty: [ ^ self ].
+	newLayer := OrderedCollection new.
+	(self
+		 selectNodesFrom: candidates
+		 forWhichAllPrerequisiteNodesArePresentIn: self nodesInLayers)
+		ifNotEmpty: [ :selectedCandidates | 
+		newLayer addAll: selectedCandidates ]
+		ifEmpty: [ 
 
-{ #category : #'private - hook' }
-DvHorizontalTreeLayout >> distributeChildrenInLayers: dummy [
 
-	| nextLayer |
-	nextLayer := self nextChildrenForWhichDependenciesArePresent 
-		             ifEmpty: [ self nextChildrenToBreakTheCycle ].
+			(self
+				 selectMostSuitableNodeFrom: candidates
+				 forWhichMostPrerequisiteNodesArePresentIn: self nodesInLayers) 
+				ifNotNil: [ :n | 
+					newLayer add: n.
+					candidates remove: n.
+					[ 
+					| selectedCandidates |
+					selectedCandidates := self
+						                      selectNodesFrom: candidates
+						                      forWhichAllPrerequisiteNodesArePresentIn:
+						                      self nodesInLayers , candidates.
+					newLayer addAll: selectedCandidates.
+					candidates removeAll: selectedCandidates.
+					selectedCandidates notEmpty ] whileTrue ] ].
+	newLayer ifEmpty: [ ^self ].
+	nodesByLayer add: newLayer.
+	self distributeChildrenInLayers.
 
-	nextLayer ifEmpty: [ ^ self ].
-
-	"	self nodesAlreadyInLayers do: [ :el | nextLayer addAll: (self childrenFor: el) ].
-	nextLayer ifEmpty: [ 
-		| unusedEls elWithMaxOuts |
-		unusedEls := alreadyInLayers reject: [ :el | 
-			             self isAlreadyInAPreviousLayer: el ].
-		unusedEls ifEmpty: [ ^ self ].
-		elWithMaxOuts := (unusedEls sortedOnPaths:
-			                  #( #( outgoingLines size ) )) last.
-		nextLayer add: elWithMaxOuts ].
-	nextLayer := nextLayer asOrderedCollection."
-	nodesByLayer add: nextLayer.
-	self distributeChildrenInLayers: nil
+	" ifNotNilOrEmpty: [ 
+		:coll | 
+		nodesByLayer add: coll.
+		self distributeChildrenInLayers ].
+	self nextChildrenToBreakTheCycle"
 ]
 
 { #category : #'private - hook' }
@@ -50,14 +57,19 @@ DvHorizontalTreeLayout >> doExecute: elements [
 	nodesByLayer := OrderedCollection new.
 	rootNodes := self rootNodesFor: elements.
 	nodesByLayer add: rootNodes.
-
-
-	self distributeChildrenInLayers: nil.
+	self distributeChildrenInLayers.
 	"leftOvers are probably circular chains?"
 	leftOvers := elements reject: [ :e | 
 		             self isAlreadyInAPreviousLayer: e ].
 	leftOvers ifNotEmpty: [ nodesByLayer add: leftOvers ].
 	self layoutLayers
+]
+
+{ #category : #'private - hook' }
+DvHorizontalTreeLayout >> filterCandidatesForWhichDependenciesArePresent: candidates [
+
+	^ candidates select: [ :candidate | 
+		  (self numberOfMissingDependenciesFor: candidate) isZero ]
 ]
 
 { #category : #'private - hook' }
@@ -69,7 +81,7 @@ DvHorizontalTreeLayout >> heightOfLayer: layer [
 { #category : #initialization }
 DvHorizontalTreeLayout >> initialize [
 	super initialize.
-	layers := OrderedCollection new
+
 ]
 
 { #category : #'private - hook' }
@@ -110,12 +122,36 @@ DvHorizontalTreeLayout >> maxLayerHeight [
 ]
 
 { #category : #'private - hook' }
+DvHorizontalTreeLayout >> nextChildWithLeastMissingDependencies [
+
+	^ self nextChildren ifEmpty: [ nil ] ifNotEmpty: [ :results | 
+		  (results sorted: [ :a :b | 
+			   a outgoingLines size >= b outgoingLines size  ])
+			  first ]
+]
+
+{ #category : #'private - hook' }
+DvHorizontalTreeLayout >> nextChildWithLeastMissingDependenciesNot [
+
+	^ self nextChildren ifEmpty: [ nil ] ifNotEmpty: [ :results | 
+		  (results sorted: [ :a :b | 
+			   | mda mdb |
+			   mda := self numberOfMissingDependenciesFor: a.
+			   mdb := self numberOfMissingDependenciesFor: b.
+			   mda = mdb
+				   ifFalse: [ mda <= mdb ]
+				   ifTrue: [ a outgoingLines size >= b outgoingLines size ] ])
+			  first ]
+]
+
+{ #category : #'private - hook' }
 DvHorizontalTreeLayout >> nextChildren [
 
 	| results |
 	results := Set new.
 	self nodesInLayers do: [ :each | 
 		results addAll: (self childrenFor: each) ].
+	"filter out nodes already handled"
 	results := results reject: [ :e | self isAlreadyInAPreviousLayer: e ].
 	^ results asOrderedCollection
 ]
@@ -123,19 +159,19 @@ DvHorizontalTreeLayout >> nextChildren [
 { #category : #'private - hook' }
 DvHorizontalTreeLayout >> nextChildrenForWhichDependenciesArePresent [
 
-	| results |
-	results := self nextChildren.
-	^ results select: [ :candidate | 
-		  candidate incomingLines allSatisfy: [ :cl | 
-			  self isAlreadyInAPreviousLayer: cl from ] ]
+	^ self filterCandidatesForWhichDependenciesArePresent:
+		  self nextChildren
 ]
 
 { #category : #'private - hook' }
 DvHorizontalTreeLayout >> nextChildrenToBreakTheCycle [
 
-	^ self nextChildren ifNotEmpty: [ :results | 
-		  { (results sorted: [ :a :b | 
-			   a outgoingLines size <= b outgoingLines size ]) last } ]
+	| results |
+	results := OrderedCollection new.
+	nodesByLayer add: results.
+	self nextChildWithLeastMissingDependencies ifNotNil: [ :n | 
+		results add: n ].
+	self next
 ]
 
 { #category : #'private - hook' }
@@ -145,4 +181,27 @@ DvHorizontalTreeLayout >> nodesInLayers [
 	all := OrderedCollection new.
 	nodesByLayer do: [ :layer | layer do: [ :n | all add: n ] ].
 	^ all
+]
+
+{ #category : #'private - hook' }
+DvHorizontalTreeLayout >> numberOfMissingDependenciesFor: aNode [
+
+	^ (aNode incomingLines reject: [ :cl | 
+		   self isAlreadyInAPreviousLayer: cl from ]) size
+]
+
+{ #category : #'private - hook' }
+DvHorizontalTreeLayout >> selectMostSuitableNodeFrom: candidates forWhichMostPrerequisiteNodesArePresentIn: prerequisites [
+
+	candidates ifEmpty: [ ^ nil ].
+	^ (candidates sorted: [ :a :b | 
+		   a outgoingLines size >= b outgoingLines size ]) first
+]
+
+{ #category : #'private - hook' }
+DvHorizontalTreeLayout >> selectNodesFrom: candidates forWhichAllPrerequisiteNodesArePresentIn: prequisites [
+
+	^ candidates select: [ :candidate | 
+		  candidate incomingLines allSatisfy: [ :prereqLine | 
+			  prequisites includes: prereqLine from ] ]
 ]
