@@ -30,7 +30,7 @@ self example1
 
 	window := c openWithTitle: 'Dependencies of the Phx project'.
 	window extent: 2000 @ 1300.
-	
+	window maximize.
 	"c zoomToFit"
 	"	c inspect."
 ]

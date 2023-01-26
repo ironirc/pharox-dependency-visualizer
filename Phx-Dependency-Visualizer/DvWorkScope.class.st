@@ -22,7 +22,7 @@ self example1
 "
 
 	| patterns names wsc |
-	patterns := { 'phx*'. 'biti'. 'Pharo-home*'. '*ecg*' }.
+	patterns := { 'phx*'. 'biti'. 'Pharo-home*'. '*ecg*' . '*Astigmatic*'}.
 	names := ((RPackageOrganizer default packages select: [ :p | 
 		           patterns anySatisfy: [ :patt | patt match: p name ] ]) 
 		          collect: #name) sorted.
