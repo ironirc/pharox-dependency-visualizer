@@ -65,10 +65,15 @@ DvRsWorkScope >> applyLayoutHierarchical [
 		horizontalGap: 50;
 		verticalGap: 5.
 	rsLayout on: self nodes
+	
+	"rsLayout:=	RSCircleLayout new.
+	rsLayout ""	horizontalGap: 20;
+		verticalGap: 10;""
+		on: self nodes."
 
 	"; on: self nodes"
 
-	 "RSForceBasedLayout new
+"	 RSForceBasedLayout new
 		doNotUseProgressBar; 
 		autoRepulse: true;
 		alpha: 0.1;

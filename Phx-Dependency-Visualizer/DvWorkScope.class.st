@@ -44,7 +44,7 @@ self example1
 		as: 'Phx-Crm'.
 	wsc
 		groupPackages: [ :p | 
-			{ 'Phx-Pj-Cordova'. 'Phx-Pj-Vue'. 'Phx-Pj-Nectar-Api'.
+			{ 'Phx-Pj-Cordova'. "'Phx-Pj-Vue'." 'Phx-Pj-Nectar-Api'.
 			'Phx-Pj-Cordova-Experiments'. 'Phx-Pj-NodeJs-Reporting-Experiments'.
 			'Phx-Pj-Quasar-Nectar' } anySatisfy: [ :e | e = p name ] ]
 		as: 'Phx-Pj-Quasar-Nectar'.
