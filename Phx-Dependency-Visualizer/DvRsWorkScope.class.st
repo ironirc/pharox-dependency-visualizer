@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #examples }
-DvRsWorkScope class >> example1 [
+DvRsWorkScope class >> examplePhxPackages [
 
 "
 self example1
@@ -16,7 +16,7 @@ self example1
 	c addInteraction: (RSCanvasController new
 			 in: [ :i | i configuration useBasicZoom ];
 			 yourself).
-	vis := DvRsWorkScope new model: DvWorkScope example1.
+	vis := DvRsWorkScope new model: DvWorkScope newForPhx.
 	vis build.
 	c add: vis.
 "		layout := RSForceBasedLayout new

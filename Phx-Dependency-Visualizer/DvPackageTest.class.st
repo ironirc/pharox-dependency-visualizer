@@ -15,6 +15,9 @@ DvPackageTest >> test1 [
 DvPackageTest >> test2 [
 
 	| ws |
-	ws := DvWorkScope example1.
-	ws packages do: [ :i | i packagesYouDependOn; computePackagesDependingOnYou ]
+	ws := DvWorkScope newForPhx.
+	ws packages do: [ :i | 
+		i
+			packagesYouDependOn;
+			computePackagesDependingOnYou ]
 ]
