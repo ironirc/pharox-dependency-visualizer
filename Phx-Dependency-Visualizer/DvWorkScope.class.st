@@ -67,11 +67,11 @@ self newForPhx
 		
 			'Phx-Pj-Quasar-Nectar' } anySatisfy: [ :e | e = p name ] ]
 		as: 'Nectar'.
-	wsc
+"	wsc
 		groupPackages: [ :p | 
 			{ 'Phx-Pj-Proxy'. 'Phx-Pj-Comp21'. 'Phx-Pj-Comp22' } anySatisfy: [ 
 				:e | e = p name ] ]
-		as: 'Phx-Pj-Comp21-Comp22'.
+		as: 'Phx-Pj-Comp21-Comp22'."
 	wsc
 		groupPackages: [ :p | 
 			{ 'Phx-Support'. 'Phx-Pharo-Extensions'. 'Phx-Pharo-Overrides'.
