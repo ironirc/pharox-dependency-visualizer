@@ -5,12 +5,9 @@ Class {
 }
 
 { #category : #examples }
-DvRsWorkScope class >> examplePhxPackages [
+DvRsWorkScope class >> phx [
 
-"
-self example1
-"
-
+	<script>
 	| vis c window |
 	c := RSCanvas new.
 	c addInteraction: (RSCanvasController new
@@ -19,7 +16,7 @@ self example1
 	vis := DvRsWorkScope new model: DvWorkScope newForPhx.
 	vis build.
 	c add: vis.
-"		layout := RSForceBasedLayout new
+	"		layout := RSForceBasedLayout new
 		autoRepulse: true;
 		charge: 300;
 		nodes: vis nodes;
@@ -30,13 +27,13 @@ self example1
 
 	window := c openWithTitle: 'Dependencies of the Phx project'.
 	window extent: 2000 @ 1300.
-	window maximize.
+	window maximize
 	"c zoomToFit"
 	"	c inspect."
 ]
 
 { #category : #examples }
-DvRsWorkScope class >> exampleRoassalPackages [
+DvRsWorkScope class >> roassal [
 
 	<script>
 	| vis c window |
