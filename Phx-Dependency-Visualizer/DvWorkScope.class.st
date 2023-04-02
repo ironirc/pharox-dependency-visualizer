@@ -14,25 +14,7 @@ Class {
 	#category : #'Phx-Dependency-Visualizer-model'
 }
 
-{ #category : #examples }
-DvWorkScope class >> exampleRoassalPackages [
-
-	"
-self exampleRoassalPackages
-"
-
-	| patterns names wsc |
-	patterns := { 'Roassal*' }.
-	names := ((RPackageOrganizer default packages select: [ :p | 
-		           patterns anySatisfy: [ :patt | patt match: p name ] ]) 
-		          collect: #name) sorted.
-	wsc := self new.
-	wsc name: 'Roassal packages'.
-	names do: [ :n | wsc addPackageNamed: n ].
-	^ wsc
-]
-
-{ #category : #'as yet unclassified' }
+{ #category : #'file persistence' }
 DvWorkScope class >> latestFileForName: aName [
 
 	"
@@ -75,10 +57,16 @@ self newForPhx
 		as: 'Phx-Crm'.
 	wsc
 		groupPackages: [ :p | 
-			{ 'Phx-Pj-Cordova'. 'Phx-Pj-Nectar-Api'. 'Phx-Pj-Cordova-Experiments'.
+			{ 'Phx-Pj-Cordova'.  'Phx-Pj-Cordova-Experiments'.
 			'Phx-Pj-NodeJs-Reporting-Experiments'.
+		 } anySatisfy: [ :e | e = p name ] ]
+		as: 'Phx-Pj-Cordova'.
+	wsc
+		groupPackages: [ :p | 
+			{ 'Phx-Pj-Nectar-Api'. 
+		
 			'Phx-Pj-Quasar-Nectar' } anySatisfy: [ :e | e = p name ] ]
-		as: 'Phx-Pj-Quasar-Nectar'.
+		as: 'Nectar'.
 	wsc
 		groupPackages: [ :p | 
 			{ 'Phx-Pj-Proxy'. 'Phx-Pj-Comp21'. 'Phx-Pj-Comp22' } anySatisfy: [ 
@@ -93,18 +81,36 @@ self newForPhx
 ]
 
 { #category : #examples }
+DvWorkScope class >> newForRoassal [
+
+	"
+self exampleRoassalPackages
+"
+
+	| patterns names wsc |
+	patterns := { 'Roassal*' }.
+	names := ((RPackageOrganizer default packages select: [ :p | 
+		           patterns anySatisfy: [ :patt | patt match: p name ] ]) 
+		          collect: #name) sorted.
+	wsc := self new.
+	wsc name: 'Roassal packages'.
+	names do: [ :n | wsc addPackageNamed: n ].
+	^ wsc
+]
+
+{ #category : #'file persistence' }
 DvWorkScope class >> persistPhxScope [
 
 	self newForPhx saveAsPhxJsonFile
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'file persistence' }
 DvWorkScope class >> readFromFileNamed: aFileName [
 
 	^ PhxJsonReader readFromString: aFileName asFileReference contents
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'file persistence' }
 DvWorkScope class >> readFromStorageClass: aClass [
 "
 	self readFromStorageClass: DvWorksScopeStorageForPhx
@@ -112,7 +118,7 @@ DvWorkScope class >> readFromStorageClass: aClass [
 	^PhxJsonReader readFromString: (aClass json)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'file persistence' }
 DvWorkScope class >> readlatestFromFileForName: aName [
 
 "

@@ -41,7 +41,7 @@ DvRsWorkScope class >> roassal [
 	c addInteraction: (RSCanvasController new
 			 in: [ :i | i configuration useBasicZoom ];
 			 yourself).
-	vis := DvRsWorkScope new model: DvWorkScope exampleRoassalPackages.
+	vis := DvRsWorkScope new model: DvWorkScope newForRoassal.
 	vis build.
 	c add: vis.
 	window := c openWithTitle: 'Dependencies inside Roassal'.
