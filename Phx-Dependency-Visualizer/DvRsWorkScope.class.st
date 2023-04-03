@@ -8,6 +8,9 @@ Class {
 DvRsWorkScope class >> phx [
 
 	<script>
+"
+DvRsWorkScope phx
+"
 	| vis c window |
 	c := RSCanvas new.
 	c addInteraction: (RSCanvasController new
