@@ -86,6 +86,14 @@ DvRsPackageGroup >> handleRename [
 ]
 
 { #category : #building }
+DvRsPackageGroup >> handleShowDependencyAnalyserEvent: anEvent [
+
+	self stopAndRemoveAllAnimations.
+	(DAPackageDependenciesPresenter onPackagesNamed:
+		 (self model packages collect: #name)) open
+]
+
+{ #category : #building }
 DvRsPackageGroup >> leftClick: evt [
 
 	| isSelected |
