@@ -185,7 +185,7 @@ DvWorkScope >> groupPackages: aBlock as: aName [
 
 	| pg |
 	pg := self packageGroupNamedOrCreate: aName. 
-	pg packages addAll: (self packages select: aBlock).
+	pg packages addAll: (self unGroupedPackages select: aBlock).
 	
 ]
 
