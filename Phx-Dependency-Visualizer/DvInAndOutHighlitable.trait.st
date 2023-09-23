@@ -70,9 +70,9 @@ DvInAndOutHighlitable >> highlightAnt: antBorder [
 { #category : #highliting }
 DvInAndOutHighlitable >> highlightBoxes: boxes withColor: aColor [
 
-	| canv  |
+	| canv |
 	canv := self canvas.
-	boxes do: [ :box | 
+	boxes do: [ :box |
 		| shadow |
 		shadow := self shadowFor: box.
 		shadow color: aColor.
@@ -81,8 +81,7 @@ DvInAndOutHighlitable >> highlightBoxes: boxes withColor: aColor [
 			do: [ :evt | shadow position: evt newPosition ].
 		box propertyAt: #shadow put: shadow.
 		canv addShape: shadow.
-		shadow pushBack ].
-	
+		shadow pushBack ]
 ]
 
 { #category : #highliting }
