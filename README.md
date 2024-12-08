@@ -6,3 +6,5 @@ Metacello new
   repository: 'github://ironirc/pharox-dependency-visualizer:main/';
   load.
 ```
+
+Should work in Pharo 11 and 12
