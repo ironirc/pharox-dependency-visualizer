@@ -1,10 +1,12 @@
 Class {
-	#name : #DvRsWorkScope,
-	#superclass : #DvRsPackageGroup,
-	#category : #'Phx-Dependency-Visualizer-visualisation'
+	#name : 'DvRsWorkScope',
+	#superclass : 'DvRsPackageGroup',
+	#category : 'Phx-Dependency-Visualizer-visualisation',
+	#package : 'Phx-Dependency-Visualizer',
+	#tag : 'visualisation'
 }
 
-{ #category : #examples }
+{ #category : 'examples' }
 DvRsWorkScope class >> phx [
 
 	<script>
@@ -35,7 +37,7 @@ DvRsWorkScope phx
 	"	c inspect."
 ]
 
-{ #category : #examples }
+{ #category : 'examples' }
 DvRsWorkScope class >> roassal [
 
 	<script>
@@ -51,12 +53,12 @@ DvRsWorkScope class >> roassal [
 	window extent: 2000 @ 1300
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 DvRsWorkScope >> addToManyRelationOnParent [
 	"no parent, no need"
 ]
 
-{ #category : #build }
+{ #category : 'build' }
 DvRsWorkScope >> applyLayoutHierarchical [
 
 		| rsLayout |
@@ -85,7 +87,7 @@ DvRsWorkScope >> applyLayoutHierarchical [
 "
 ]
 
-{ #category : #build }
+{ #category : 'build' }
 DvRsWorkScope >> build [
 
 	self buildPackages.
@@ -99,7 +101,7 @@ DvRsWorkScope >> build [
 	"
 ]
 
-{ #category : #build }
+{ #category : 'build' }
 DvRsWorkScope >> buildPackageGroups [
 
 	self model packageGroups do: [ :pg | 
@@ -110,7 +112,7 @@ DvRsWorkScope >> buildPackageGroups [
 		self add: pgComp ]
 ]
 
-{ #category : #build }
+{ #category : 'build' }
 DvRsWorkScope >> connectAllPackages [
 
 	self newLineBuilder
@@ -120,13 +122,13 @@ DvRsWorkScope >> connectAllPackages [
 		connectFromAll: [ :each | each packagesYouDependOn , each packageGroupsYouDependOn ] 
 ]
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 DvRsWorkScope >> initialize [
 	super initialize.
 
 ]
 
-{ #category : #build }
+{ #category : 'build' }
 DvRsWorkScope >> marker [
 	|  marker |
 	marker := RSShapeFactory arrow.
@@ -137,7 +139,7 @@ DvRsWorkScope >> marker [
 	^ marker
 ]
 
-{ #category : #build }
+{ #category : 'build' }
 DvRsWorkScope >> newLineBuilder [
 
 	| marker |
@@ -152,18 +154,18 @@ DvRsWorkScope >> newLineBuilder [
 		  yourself
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 DvRsWorkScope >> removeFromManyRelationOnParent [
 	"no parent, no need"
 ]
 
-{ #category : #'setUp-tearDown' }
+{ #category : 'setUp-tearDown' }
 DvRsWorkScope >> setupListenersToModel [
 	super setupListenersToModel.
 
 ]
 
-{ #category : #build }
+{ #category : 'build' }
 DvRsWorkScope >> textColor [
 
 	^ Color lightGray 

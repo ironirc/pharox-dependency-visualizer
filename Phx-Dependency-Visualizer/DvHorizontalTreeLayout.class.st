@@ -1,14 +1,16 @@
 Class {
-	#name : #DvHorizontalTreeLayout,
-	#superclass : #RSAbstractHorizontalTreeLayout,
+	#name : 'DvHorizontalTreeLayout',
+	#superclass : 'RSAbstractHorizontalTreeLayout',
 	#instVars : [
 		'layers',
 		'elementsToBeLayedOut'
 	],
-	#category : #'Phx-Dependency-Visualizer-visualisation'
+	#category : 'Phx-Dependency-Visualizer-visualisation',
+	#package : 'Phx-Dependency-Visualizer',
+	#tag : 'visualisation'
 }
 
-{ #category : #'private - hook' }
+{ #category : 'private - hook' }
 DvHorizontalTreeLayout >> distributeChildrenInLayers [
 
 	| candidates newLayer |
@@ -49,7 +51,7 @@ DvHorizontalTreeLayout >> distributeChildrenInLayers [
 	self nextChildrenToBreakTheCycle"
 ]
 
-{ #category : #'private - hook' }
+{ #category : 'private - hook' }
 DvHorizontalTreeLayout >> doExecute: elements [
 
 	| rootNodes leftOvers |
@@ -65,33 +67,33 @@ DvHorizontalTreeLayout >> doExecute: elements [
 	self layoutLayers
 ]
 
-{ #category : #'private - hook' }
+{ #category : 'private - hook' }
 DvHorizontalTreeLayout >> filterCandidatesForWhichDependenciesArePresent: candidates [
 
 	^ candidates select: [ :candidate | 
 		  (self numberOfMissingDependenciesFor: candidate) isZero ]
 ]
 
-{ #category : #'private - hook' }
+{ #category : 'private - hook' }
 DvHorizontalTreeLayout >> heightOfLayer: layer [
 
 	^ layer inject: 0 into: [ :sum :each | sum + (each height * 2) ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 DvHorizontalTreeLayout >> initialize [
 	super initialize.
 
 ]
 
-{ #category : #'private - hook' }
+{ #category : 'private - hook' }
 DvHorizontalTreeLayout >> isAlreadyInAPreviousLayer: aNode [
 
 	nodesByLayer do: [ :layer | layer do: [ :n | aNode = n ifTrue: [ ^true ] ] ].
 	^false
 ]
 
-{ #category : #'private - hook' }
+{ #category : 'private - hook' }
 DvHorizontalTreeLayout >> layoutLayers [
 
 	| maxLayerHeight layerX |
@@ -113,7 +115,7 @@ DvHorizontalTreeLayout >> layoutLayers [
 		layer do: [ :each | each translateBy: layerX @ 0 ] ]
 ]
 
-{ #category : #'private - hook' }
+{ #category : 'private - hook' }
 DvHorizontalTreeLayout >> maxLayerHeight [
 
 	^ nodesByLayer
@@ -121,7 +123,7 @@ DvHorizontalTreeLayout >> maxLayerHeight [
 		  into: [ :max :layer | max max: (self heightOfLayer: layer) ]
 ]
 
-{ #category : #'private - hook' }
+{ #category : 'private - hook' }
 DvHorizontalTreeLayout >> nextChildWithLeastMissingDependencies [
 
 	^ self nextChildren ifEmpty: [ nil ] ifNotEmpty: [ :results | 
@@ -130,7 +132,7 @@ DvHorizontalTreeLayout >> nextChildWithLeastMissingDependencies [
 			  first ]
 ]
 
-{ #category : #'private - hook' }
+{ #category : 'private - hook' }
 DvHorizontalTreeLayout >> nextChildWithLeastMissingDependenciesNot [
 
 	^ self nextChildren ifEmpty: [ nil ] ifNotEmpty: [ :results | 
@@ -144,7 +146,7 @@ DvHorizontalTreeLayout >> nextChildWithLeastMissingDependenciesNot [
 			  first ]
 ]
 
-{ #category : #'private - hook' }
+{ #category : 'private - hook' }
 DvHorizontalTreeLayout >> nextChildren [
 
 	| results |
@@ -156,14 +158,14 @@ DvHorizontalTreeLayout >> nextChildren [
 	^ results asOrderedCollection
 ]
 
-{ #category : #'private - hook' }
+{ #category : 'private - hook' }
 DvHorizontalTreeLayout >> nextChildrenForWhichDependenciesArePresent [
 
 	^ self filterCandidatesForWhichDependenciesArePresent:
 		  self nextChildren
 ]
 
-{ #category : #'private - hook' }
+{ #category : 'private - hook' }
 DvHorizontalTreeLayout >> nextChildrenToBreakTheCycle [
 
 	| results |
@@ -174,7 +176,7 @@ DvHorizontalTreeLayout >> nextChildrenToBreakTheCycle [
 	self next
 ]
 
-{ #category : #'private - hook' }
+{ #category : 'private - hook' }
 DvHorizontalTreeLayout >> nodesInLayers [
 
 	| all |
@@ -183,14 +185,14 @@ DvHorizontalTreeLayout >> nodesInLayers [
 	^ all
 ]
 
-{ #category : #'private - hook' }
+{ #category : 'private - hook' }
 DvHorizontalTreeLayout >> numberOfMissingDependenciesFor: aNode [
 
 	^ (aNode incomingLines reject: [ :cl | 
 		   self isAlreadyInAPreviousLayer: cl from ]) size
 ]
 
-{ #category : #'private - hook' }
+{ #category : 'private - hook' }
 DvHorizontalTreeLayout >> selectMostSuitableNodeFrom: candidates forWhichMostPrerequisiteNodesArePresentIn: prerequisites [
 
 	candidates ifEmpty: [ ^ nil ].
@@ -198,7 +200,7 @@ DvHorizontalTreeLayout >> selectMostSuitableNodeFrom: candidates forWhichMostPre
 		   a outgoingLines size >= b outgoingLines size ]) first
 ]
 
-{ #category : #'private - hook' }
+{ #category : 'private - hook' }
 DvHorizontalTreeLayout >> selectNodesFrom: candidates forWhichAllPrerequisiteNodesArePresentIn: prequisites [
 
 	^ candidates select: [ :candidate | 

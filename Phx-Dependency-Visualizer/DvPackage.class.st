@@ -1,16 +1,18 @@
 Class {
-	#name : #DvPackage,
-	#superclass : #DvNamedObjectInScope,
-	#category : #'Phx-Dependency-Visualizer-model'
+	#name : 'DvPackage',
+	#superclass : 'DvNamedObjectInScope',
+	#category : 'Phx-Dependency-Visualizer-model',
+	#package : 'Phx-Dependency-Visualizer',
+	#tag : 'model'
 }
 
-{ #category : #'many relations' }
+{ #category : 'many relations' }
 DvPackage >> addYourselfToScope: aScope [  
 
 	aScope addPackage: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DvPackage >> computePackageGroupsYouDependOn [
 
 	| all |
@@ -21,27 +23,27 @@ DvPackage >> computePackageGroupsYouDependOn [
 	^ all asOrderedCollection
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 DvPackage >> computePackagesDependingOnYou [
 
 	^ self scope packages select: [ :p | 
 		  p packagesYouDependOn includes: self ]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 DvPackage >> computePackagesYouDependOn [
 
 	^(self scope packagesDependedOnByPackageNamed: self name) collect: [ :p | 
 		self scope packages detect: [ :wsP | wsP name = p name ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DvPackage >> packagesDependingOnYou [
 
 	^ self computePackagesDependingOnYou
 ]
 
-{ #category : #'many relations' }
+{ #category : 'many relations' }
 DvPackage >> removeYourselfFromScope: aScope [  
 
 	aScope removePackage: self

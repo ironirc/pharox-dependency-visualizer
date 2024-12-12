@@ -1,13 +1,15 @@
 Class {
-	#name : #DvRsPackage,
-	#superclass : #PhxRsComposite,
+	#name : 'DvRsPackage',
+	#superclass : 'PhxRsComposite',
 	#instVars : [
 		'box'
 	],
-	#category : #'Phx-Dependency-Visualizer-visualisation'
+	#category : 'Phx-Dependency-Visualizer-visualisation',
+	#package : 'Phx-Dependency-Visualizer',
+	#tag : 'visualisation'
 }
 
-{ #category : #building }
+{ #category : 'building' }
 DvRsPackage >> build [
 
 	| label |
@@ -33,7 +35,7 @@ DvRsPackage >> build [
 	self adjustToChildren
 ]
 
-{ #category : #'announcement handling' }
+{ #category : 'announcement handling' }
 DvRsPackage >> handleAnnouncementAspectChanged: a [
 
 	| sh |
@@ -46,34 +48,34 @@ DvRsPackage >> handleAnnouncementAspectChanged: a [
 		self canvas signalUpdate ]
 ]
 
-{ #category : #menu }
+{ #category : 'menu' }
 DvRsPackage >> handleBrowseEvent: evt [
 	self  stopAndRemoveAllAnimations.
 	(RPackageOrganizer default packageNamed: self model name) browse
 
 ]
 
-{ #category : #menu }
+{ #category : 'menu' }
 DvRsPackage >> handleInspectEvent: evt [
 	self  stopAndRemoveAllAnimations.
 	evt shape inspect
 
 ]
 
-{ #category : #menu }
+{ #category : 'menu' }
 DvRsPackage >> handleShowDependencyAnalyserEvent: anEvent [
 	self stopAndRemoveAllAnimations.
 	(DAPackageDependenciesPresenter onPackagesNamed:
 		 { self model name }) open
 ]
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 DvRsPackage >> initialize [
 	super initialize.
 
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 DvRsPackage >> leftClick: evt [
 
 	| isSelected |
@@ -86,7 +88,7 @@ DvRsPackage >> leftClick: evt [
 	self signalUpdate
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 DvRsPackage >> printOn: ws [
 
 	super printOn: ws.
@@ -95,13 +97,13 @@ DvRsPackage >> printOn: ws [
 	ws << ')'
 ]
 
-{ #category : #'setUp-tearDown' }
+{ #category : 'setUp-tearDown' }
 DvRsPackage >> setupListenersToModel [
 	super setupListenersToModel.
 
 ]
 
-{ #category : #menu }
+{ #category : 'menu' }
 DvRsPackage >> showMenu: evt [
 
 	| menu |
@@ -125,7 +127,7 @@ DvRsPackage >> showMenu: evt [
 	^ menu popUpInWorld
 ]
 
-{ #category : #'setUp-tearDown' }
+{ #category : 'setUp-tearDown' }
 DvRsPackage >> tearDown [
 	self mainShape ifNotNil: [ :ms | self canvas removeShape: ms ].
 	self parent: nil.

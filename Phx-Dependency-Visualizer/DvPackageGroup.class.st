@@ -1,25 +1,27 @@
 Class {
-	#name : #DvPackageGroup,
-	#superclass : #DvNamedObjectInScope,
+	#name : 'DvPackageGroup',
+	#superclass : 'DvNamedObjectInScope',
 	#instVars : [
 		'packages'
 	],
-	#category : #'Phx-Dependency-Visualizer-model'
+	#category : 'Phx-Dependency-Visualizer-model',
+	#package : 'Phx-Dependency-Visualizer',
+	#tag : 'model'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DvPackageGroup >> addPackage: aPackage [
 
  	self packages add: aPackage
 ]
 
-{ #category : #'many relations' }
+{ #category : 'many relations' }
 DvPackageGroup >> addYourselfToScope: aScope [  
 
 	aScope addPackageGroup: self
 ]
 
-{ #category : #'accessing derived' }
+{ #category : 'accessing derived' }
 DvPackageGroup >> computePackageGroupsYouDependOn [
 
 	| all |
@@ -31,7 +33,7 @@ DvPackageGroup >> computePackageGroupsYouDependOn [
 	^ all asOrderedCollection
 ]
 
-{ #category : #'accessing derived' }
+{ #category : 'accessing derived' }
 DvPackageGroup >> computePackagesYouDependOn [
 
 	| all |
@@ -40,25 +42,25 @@ DvPackageGroup >> computePackagesYouDependOn [
 	^ all asOrderedCollection
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DvPackageGroup >> packageGroups [
 	^{}
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DvPackageGroup >> packages [
 
 	packages ifNil: [ packages := OrderedCollection new ].
 	^ packages
 ]
 
-{ #category : #'many relations' }
+{ #category : 'many relations' }
 DvPackageGroup >> removeYourselfFromScope: aScope [  
 
 	aScope removePackageGroup: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DvPackageGroup >> unGroupedPackages [
 	^self packages
 ]

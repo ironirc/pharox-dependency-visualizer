@@ -1,10 +1,12 @@
 Class {
-	#name : #DvAbstractObject,
-	#superclass : #Model,
-	#category : #'Phx-Dependency-Visualizer-model'
+	#name : 'DvAbstractObject',
+	#superclass : 'Model',
+	#category : 'Phx-Dependency-Visualizer-model',
+	#package : 'Phx-Dependency-Visualizer',
+	#tag : 'model'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 DvAbstractObject class >> newNamed: aName [
 
 	| inst |
@@ -13,7 +15,7 @@ DvAbstractObject class >> newNamed: aName [
 	^ inst
 ]
 
-{ #category : #changing }
+{ #category : 'changing' }
 DvAbstractObject >> changed: aSymbol [
 
 	super changed: aSymbol.

@@ -1,14 +1,16 @@
 Class {
-	#name : #DvRsPackageGroup,
-	#superclass : #PhxRsComposite,
+	#name : 'DvRsPackageGroup',
+	#superclass : 'PhxRsComposite',
 	#instVars : [
 		'box',
 		'label'
 	],
-	#category : #'Phx-Dependency-Visualizer-visualisation'
+	#category : 'Phx-Dependency-Visualizer-visualisation',
+	#package : 'Phx-Dependency-Visualizer',
+	#tag : 'visualisation'
 }
 
-{ #category : #build }
+{ #category : 'build' }
 DvRsPackageGroup >> addPackage: aPackage [
 
 	| rsPackage |
@@ -18,7 +20,7 @@ DvRsPackageGroup >> addPackage: aPackage [
 	self add: rsPackage
 ]
 
-{ #category : #build }
+{ #category : 'build' }
 DvRsPackageGroup >> adjustBox: aBox on: someShapes [
 
 	| rect |
@@ -28,7 +30,7 @@ DvRsPackageGroup >> adjustBox: aBox on: someShapes [
 		position: rect floatCenter
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 DvRsPackageGroup >> build [
 
 	self buildPackages.
@@ -61,20 +63,20 @@ DvRsPackageGroup >> build [
 	self when: RSMouseRightClick send: #showMenu: to: self
 ]
 
-{ #category : #build }
+{ #category : 'build' }
 DvRsPackageGroup >> buildPackages [
 
 	self model unGroupedPackages do: [ :p | self addPackage: p ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 DvRsPackageGroup >> handleInspectEvent: evt [
 	self  stopAndRemoveAllAnimations.
 	evt shape inspect
 
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 DvRsPackageGroup >> handleRename [
 
 	| aName |
@@ -85,7 +87,7 @@ DvRsPackageGroup >> handleRename [
 	self model name: aName
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 DvRsPackageGroup >> handleShowDependencyAnalyserEvent: anEvent [
 
 	self stopAndRemoveAllAnimations.
@@ -93,7 +95,7 @@ DvRsPackageGroup >> handleShowDependencyAnalyserEvent: anEvent [
 		 (self model packages collect: #name)) open
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 DvRsPackageGroup >> leftClick: evt [
 
 	| isSelected |
@@ -106,7 +108,7 @@ DvRsPackageGroup >> leftClick: evt [
 	self signalUpdate
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 DvRsPackageGroup >> showMenu: evt [
 
 	| menu |
@@ -134,7 +136,7 @@ DvRsPackageGroup >> showMenu: evt [
 	^ menu popUpInWorld
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DvRsPackageGroup >> update: aSymbol [
 
 	super update: aSymbol.
@@ -143,7 +145,7 @@ DvRsPackageGroup >> update: aSymbol [
 		^ self ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DvRsPackageGroup >> updateName [
 
 	label text: self model name.

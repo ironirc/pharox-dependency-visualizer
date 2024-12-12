@@ -1,1 +1,1 @@
-Package { #name : #'Phx-Dependency-Visualizer' }
+Package { #name : 'Phx-Dependency-Visualizer' }

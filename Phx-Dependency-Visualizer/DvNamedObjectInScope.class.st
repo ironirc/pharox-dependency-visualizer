@@ -1,22 +1,24 @@
 Class {
-	#name : #DvNamedObjectInScope,
-	#superclass : #DvAbstractObject,
+	#name : 'DvNamedObjectInScope',
+	#superclass : 'DvAbstractObject',
 	#instVars : [
 		'scope',
 		'name',
 		'packagesYouDependOn',
 		'packageGroupsYouDependOn'
 	],
-	#category : #'Phx-Dependency-Visualizer-model'
+	#category : 'Phx-Dependency-Visualizer-model',
+	#package : 'Phx-Dependency-Visualizer',
+	#tag : 'model'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DvNamedObjectInScope >> name [
 
 	^ name
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DvNamedObjectInScope >> name: anObject [
 
 	name := anObject.
@@ -24,7 +26,7 @@ DvNamedObjectInScope >> name: anObject [
 	
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DvNamedObjectInScope >> packageGroupsYouDependOn [
 
 	packageGroupsYouDependOn ifNil: [ 
@@ -32,7 +34,7 @@ DvNamedObjectInScope >> packageGroupsYouDependOn [
 	^ packageGroupsYouDependOn
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DvNamedObjectInScope >> packagesYouDependOn [
 
 	packagesYouDependOn ifNil: [ 
@@ -40,7 +42,7 @@ DvNamedObjectInScope >> packagesYouDependOn [
 	^ packagesYouDependOn
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 DvNamedObjectInScope >> printOn: ws [
 
 	super printOn: ws.
@@ -49,13 +51,13 @@ DvNamedObjectInScope >> printOn: ws [
 	ws << ')'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DvNamedObjectInScope >> scope [
 
 	^ scope
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DvNamedObjectInScope >> scope: anObject [
 
 	scope ifNotNil: [ self removeYourselfFromScope: scope ].

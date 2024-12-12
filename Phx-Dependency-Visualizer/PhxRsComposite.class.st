@@ -1,12 +1,14 @@
 Class {
-	#name : #PhxRsComposite,
-	#superclass : #RSComposite,
+	#name : 'PhxRsComposite',
+	#superclass : 'RSComposite',
 	#traits : 'DvInAndOutHighlitable',
 	#classTraits : 'DvInAndOutHighlitable classTrait',
-	#category : #'Phx-Dependency-Visualizer-visualisation'
+	#category : 'Phx-Dependency-Visualizer-visualisation',
+	#package : 'Phx-Dependency-Visualizer',
+	#tag : 'visualisation'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 PhxRsComposite class >> newUnder: anObject [
 	| object |
 	object := super new.
@@ -14,7 +16,7 @@ PhxRsComposite class >> newUnder: anObject [
 	^ object
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhxRsComposite >> model: anObject [
 
 	model ifNotNil: [ self removeDependent: self ].

@@ -1,17 +1,19 @@
 Class {
-	#name : #DvPackageTest,
-	#superclass : #TestCase,
-	#category : #'Phx-Dependency-Visualizer-testing'
+	#name : 'DvPackageTest',
+	#superclass : 'TestCase',
+	#category : 'Phx-Dependency-Visualizer-testing',
+	#package : 'Phx-Dependency-Visualizer',
+	#tag : 'testing'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 DvPackageTest >> test1 [
 
 	| p |
 	p := DvPackage newNamed: self class package name.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 DvPackageTest >> test2 [
 
 	| ws |

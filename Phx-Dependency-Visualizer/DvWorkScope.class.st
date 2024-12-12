@@ -3,18 +3,20 @@ Contains all parts of the project we want to take in consideration.
 -packages, package groups (baselines, repo's)
 "
 Class {
-	#name : #DvWorkScope,
-	#superclass : #DvAbstractObject,
+	#name : 'DvWorkScope',
+	#superclass : 'DvAbstractObject',
 	#instVars : [
 		'packageRelationGraph',
 		'packages',
 		'packageGroups',
 		'name'
 	],
-	#category : #'Phx-Dependency-Visualizer-model'
+	#category : 'Phx-Dependency-Visualizer-model',
+	#package : 'Phx-Dependency-Visualizer',
+	#tag : 'model'
 }
 
-{ #category : #'file persistence' }
+{ #category : 'file persistence' }
 DvWorkScope class >> latestFileForName: aName [
 
 	"
@@ -26,7 +28,7 @@ self latestFileForName: 'PhxAndOthers'
 		  ifNotEmpty: [ :coll | coll first ]
 ]
 
-{ #category : #examples }
+{ #category : 'examples' }
 DvWorkScope class >> newForPhx [
 	"
 self newForPhx
@@ -48,8 +50,8 @@ self newForPhx
 		as: 'Comp23'.
 	wsc
 		groupPackages: [ :p |
-			{ 'Phx-Pj-Core-Traits'. 'Phx-Pj-Dom-Builder'. 'Phx-Pj-Web-Components'.
-			'Phx-Pj-Core-PubSub'. 'Phx-Pj-Client-Server'. 'Phx-Pj-Core-Support' }
+			{ 'Phx-Pj-Core'. 'Phx-Pj-Core-Traits'. 'Phx-Pj-Dom-Builder'. 'Phx-Pj-Web-Components'. 'Phx-Pj-Testing-Framework'.
+			'Phx-Pj-Core-PubSub'. 'Phx-Pj-Core-PubSub-Testing'. 'Phx-Pj-Client-Server'. 'Phx-Pj-Core-Support' }
 				anySatisfy: [ :e | e = p name ] ]
 		as: 'Phx-Pj-Basics'.
 	wsc
@@ -88,7 +90,7 @@ self newForPhx
 	^ wsc
 ]
 
-{ #category : #examples }
+{ #category : 'examples' }
 DvWorkScope class >> newForRoassal [
 
 	"
@@ -106,19 +108,29 @@ self exampleRoassalPackages
 	^ wsc
 ]
 
-{ #category : #'file persistence' }
+{ #category : 'file persistence' }
 DvWorkScope class >> persistPhxScope [
 
 	self newForPhx saveAsPhxJsonFile
 ]
 
-{ #category : #'file persistence' }
+{ #category : 'examples' }
+DvWorkScope class >> projects [
+"NOT USED YET"
+"#('PharoHomeAssistantApi' 'PharoX' 'PharoXBasics' 'PharoXDependencyVisualizer' 'PharoXPjVue' 'PharoXRIDE')"
+	| searchStrings |
+	searchStrings := #( 'PharoHomeAssistantApi' 'pharox*' ).
+	^ ClySystemEnvironment currentImage projectManager projects select: [
+		  :p | searchStrings anySatisfy: [ :ss | ss match: p name ] ]
+]
+
+{ #category : 'file persistence' }
 DvWorkScope class >> readFromFileNamed: aFileName [
 
 	^ PhxJsonReader readFromString: aFileName asFileReference contents
 ]
 
-{ #category : #'file persistence' }
+{ #category : 'file persistence' }
 DvWorkScope class >> readFromStorageClass: aClass [
 "
 	self readFromStorageClass: DvWorksScopeStorageForPhx
@@ -126,7 +138,7 @@ DvWorkScope class >> readFromStorageClass: aClass [
 	^PhxJsonReader readFromString: (aClass json)
 ]
 
-{ #category : #'file persistence' }
+{ #category : 'file persistence' }
 DvWorkScope class >> readlatestFromFileForName: aName [
 
 "
@@ -136,21 +148,21 @@ self readlatestFromFileForName: 'PhxAndOthers'
 	^ self readFromFileNamed: (self latestFileForName: aName)
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 DvWorkScope >> addPackage: aPackage [ 
 
 	self packages add: aPackage.
 	self changed: #packages
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 DvWorkScope >> addPackageGroup: aPackageGroup [
 
 	self packageGroups add: aPackageGroup.
 	self changed: #packageGroups
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 DvWorkScope >> addPackageGroupNamed: aName [
 
 	| p pg |
@@ -159,7 +171,7 @@ DvWorkScope >> addPackageGroupNamed: aName [
 	^ pg
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 DvWorkScope >> addPackageNamed: aName [
 
 	| p |
@@ -167,14 +179,14 @@ DvWorkScope >> addPackageNamed: aName [
 	p scope: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DvWorkScope >> allPackageNamesDependedOnByPackageNamed: aPackageName [
 
 	^ (self packageRelationGraph packageAt: aPackageName)
 		  dependentPackages collect: [ :e | e packageName ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DvWorkScope >> baseForFilename [
 
 	^ String streamContents: [ :ws | 
@@ -188,7 +200,7 @@ DvWorkScope >> baseForFilename [
 		  ws << '.phxjson' ]
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 DvWorkScope >> groupPackages: aBlock as: aName [ 
 
 	| pg |
@@ -197,26 +209,26 @@ DvWorkScope >> groupPackages: aBlock as: aName [
 	
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 DvWorkScope >> groupsAndPackagesDo: aBlock [  
 
 	self packageGroups do: [ :pg | aBlock value: pg ].
 	self unGroupedPackages do: [:p | aBlock value: p   ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DvWorkScope >> name [
 
 	^ name
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DvWorkScope >> name: anObject [
 
 	name := anObject
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 DvWorkScope >> packageGroupNamed: aName ifAbsent: aBlock [
 
 	^ self packageGroups
@@ -224,7 +236,7 @@ DvWorkScope >> packageGroupNamed: aName ifAbsent: aBlock [
 		  ifNone: [ aBlock value ]
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 DvWorkScope >> packageGroupNamedOrCreate: aName [
 
 	^ self
@@ -232,19 +244,19 @@ DvWorkScope >> packageGroupNamedOrCreate: aName [
 		  ifAbsent: [ self addPackageGroupNamed: aName ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DvWorkScope >> packageGroups [
 
 	packageGroups ifNil: [ packageGroups := OrderedCollection new ].
 	^ packageGroups
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 DvWorkScope >> packageNames [  
 	^self packages collect: #name
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 DvWorkScope >> packageRelationGraph [
 
 	packageRelationGraph ifNil: [ 
@@ -257,14 +269,14 @@ DvWorkScope >> packageRelationGraph [
 	^ packageRelationGraph
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DvWorkScope >> packages [
 
 	packages ifNil: [ packages := OrderedCollection new ].
 	^ packages
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DvWorkScope >> packagesDependedOnByPackageNamed: aPackageName [
 
 	| pNames |
@@ -272,7 +284,7 @@ DvWorkScope >> packagesDependedOnByPackageNamed: aPackageName [
 	^ self packages select: [ :e | pNames includes: e name ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DvWorkScope >> persistToClass: aClass [
 
 	aClass class compile: 'json
@@ -280,7 +292,7 @@ DvWorkScope >> persistToClass: aClass [
 	^''' ,  self asPhxJsonString , '''' classified: 'persistence'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DvWorkScope >> saveAsPhxJsonFile [
 
 	| ws |
@@ -288,7 +300,7 @@ DvWorkScope >> saveAsPhxJsonFile [
 	[ ws << self asPhxJsonString ] ensure: [ ws close ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DvWorkScope >> unGroupedPackages [
 
 	^ self packages reject: [ :p | 
