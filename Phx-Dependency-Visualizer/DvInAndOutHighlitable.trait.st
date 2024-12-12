@@ -100,7 +100,7 @@ DvInAndOutHighlitable >> highlightLines: lines withColor: aColor [
 		line propertyAt: #oldBorder put: border.
 		line border: antBorder.
 		line color: aColor ].
-	self highlightAnt: antBorder
+	"self highlightAnt: antBorder"
 ]
 
 { #category : 'highliting' }
