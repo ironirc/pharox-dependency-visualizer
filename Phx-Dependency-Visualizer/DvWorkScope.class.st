@@ -36,7 +36,7 @@ self newForPhx
 
 	| patterns names wsc |
 	patterns := { 'phx*'. 'biti'. 'Pharo-home*'. '*ecg*'. '*Astigmatic*'.
-	            'Spec2*-PharoJs*' }.
+	            'Spec2-Web*' }.
 	names := ((RPackageOrganizer default packages select: [ :p |
 		           patterns anySatisfy: [ :patt | patt match: p name ] ])
 		          collect: #name) sorted.
@@ -57,12 +57,12 @@ self newForPhx
 	wsc
 		groupPackages: [ :p | '*Phx-Pj-Core*' match: p name ]
 		as: 'Phx-Pj-Core'.
-	wsc
+"	wsc
 		groupPackages: [ :p |
 			(('*Phx-Crm*' match: p name) or: [
 				 { 'Phx-Seaside-Quasar-Obsolete' } anySatisfy: [ :e | e = p name ] ])
 				and: [ (#( 'Phx-Crm-Initialisations' ) includes: p name) not ] ]
-		as: 'Phx-Crm'.
+		as: 'Phx-Crm'."
 	wsc
 		groupPackages: [ :p |
 			{ 'Phx-Pj-Cordova'. 'Phx-Pj-Cordova-Experiments'.
@@ -85,8 +85,8 @@ self newForPhx
 			'Phx-Pharo10-Overrides' } anySatisfy: [ :e | e = p name ] ]
 		as: 'Phx-Basics'.
 	wsc
-		groupPackages: [ :p | 'Spec2*-PharoJs*' match: p name ]
-		as: 'Spec2-PharoJS'.
+		groupPackages: [ :p | 'Spec2-Web*' match: p name ]
+		as: 'Spec2-Web-UI'.
 	^ wsc
 ]
 
