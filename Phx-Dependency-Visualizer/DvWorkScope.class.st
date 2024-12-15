@@ -36,7 +36,7 @@ self newForPhx
 
 	| patterns names wsc |
 	patterns := { 'phx*'. 'biti'. 'Pharo-home*'. '*ecg*'. '*Astigmatic*'.
-	            'Spec2-Web*' }.
+	            'Spec2-Web*' . 'MidiGigBooster*'}.
 	names := ((RPackageOrganizer default packages select: [ :p |
 		           patterns anySatisfy: [ :patt | patt match: p name ] ])
 		          collect: #name) sorted.
@@ -87,6 +87,10 @@ self newForPhx
 	wsc
 		groupPackages: [ :p | 'Spec2-Web*' match: p name ]
 		as: 'Spec2-Web-UI'.
+	wsc
+		groupPackages: [ :p | 'MidiGigBooster*' match: p name ]
+		as: 'MGB'.
+		
 	^ wsc
 ]
 
