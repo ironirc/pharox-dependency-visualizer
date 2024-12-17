@@ -49,7 +49,7 @@ self exampleRoassalPackages
 { #category : 'examples' }
 DvWorkScope class >> newForZincAndZodiac [
 
-	"
+"
 self exampleRoassalPackages
 "
 
@@ -61,6 +61,27 @@ self exampleRoassalPackages
 	wsc := self new.
 	wsc name: 'Zinc packages'.
 	names do: [ :n | wsc addPackageNamed: n ].
+	^ wsc
+]
+
+{ #category : 'examples' }
+DvWorkScope class >> newForZincAndZodiacGrouped [
+	"
+self exampleRoassalPackages
+"
+
+	| patterns names wsc |
+	patterns := { 'Zinc*'. 'Zodiac*' }.
+	names := ((RPackageOrganizer default packages select: [ :p |
+		           patterns anySatisfy: [ :patt | patt match: p name ] ])
+		          collect: #name) sorted.
+	wsc := self new.
+	wsc name: 'ZincAndZodiac'.
+	names do: [ :n | wsc addPackageNamed: n ].
+
+	wsc groupPackages: [ :p | 'Zinc*' match: p name ] as: 'Zinc'.
+	wsc groupPackages: [ :p | 'Zodiac*' match: p name ] as: 'Zodiac'.
+
 	^ wsc
 ]
 

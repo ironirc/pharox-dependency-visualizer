@@ -38,6 +38,22 @@ DvRsWorkScope class >> exampleWithZincAndZodiac [
 	window extent: 2000 @ 1300
 ]
 
+{ #category : 'examples' }
+DvRsWorkScope class >> exampleWithZincAndZodiacGrouped [
+
+	<script>
+	| vis c window |
+	c := RSCanvas new.
+	c addInteraction: (RSCanvasController new
+			 in: [ :i | i configuration useBasicZoom ];
+			 yourself).
+	vis := DvRsWorkScope new model: DvWorkScope newForZincAndZodiacGrouped.
+	vis build.
+	c add: vis.
+	window := c openWithTitle: 'Dependencies inside Roassal'.
+	window extent: 2000 @ 1300
+]
+
 { #category : 'private' }
 DvRsWorkScope >> addToManyRelationOnParent [
 	"no parent, no need"
