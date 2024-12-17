@@ -34,7 +34,7 @@ DvRsWorkScope class >> exampleWithZincAndZodiac [
 	vis := DvRsWorkScope new model: DvWorkScope newForZincAndZodiac.
 	vis build.
 	c add: vis.
-	window := c openWithTitle: 'Dependencies inside Roassal'.
+	window := c openWithTitle: 'Dependencies inside Zinc/Zodiac'.
 	window extent: 2000 @ 1300
 ]
 
@@ -50,7 +50,7 @@ DvRsWorkScope class >> exampleWithZincAndZodiacGrouped [
 	vis := DvRsWorkScope new model: DvWorkScope newForZincAndZodiacGrouped.
 	vis build.
 	c add: vis.
-	window := c openWithTitle: 'Dependencies inside Roassal'.
+	window := c openWithTitle: 'Dependencies between Zinc and Zodiac'.
 	window extent: 2000 @ 1300
 ]
 
