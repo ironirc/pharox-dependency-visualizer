@@ -11,7 +11,7 @@ Metacello new
 ```
 Should work in Pharo 11 and 12  
 
-# Install
+# Simple example on Zinc en Zodiac packages
 To start exploring you could try:
 ```Smalltalk
 DvRsWorkScope exampleWithZincAndZodiac
@@ -21,13 +21,6 @@ This gives you something like:
 Observe there's a cycle between Zinc-HTTP and Zinc-Resource-Meta-Core.  
 Should Zinc-Resource-Meta-Core depend on Zinc-HTTP?  
 
-Grouping packages is also possible.  
-```Smalltalk
-DvRsWorkScope exampleWithZincAndZodiacGrouped
-```
-![image](https://github.com/user-attachments/assets/1a2f1441-e2da-454f-a5c8-cfa122a6905e)
-
-
 Interact to get more insight:
 - Hover a node: green lines show de packages depended upon, red lines show packages depending on hovered node
 - If other nodes turn orange (while hovering), there's a cycle somewhere
@@ -35,10 +28,17 @@ Interact to get more insight:
 - Right click to browser the package in system browser
 - Click node to temp highlite it in yellow ( just a temp marker without further functionality)
 
+# Example on Zinc en Zodiac packages with grouping
+```Smalltalk
+DvRsWorkScope exampleWithZincAndZodiacGrouped
+```
+![image](https://github.com/user-attachments/assets/1a2f1441-e2da-454f-a5c8-cfa122a6905e)
+
+
 # TO-DO
 - Better default layout (force based?)
 - Immediate indication of cycles (now already easy to detect on sight)
 - Hovering line to display actual dependencies
+- Grouping/Ungrouping manipulation directly in graph
 - Update without re-opening the window
-- 
 - ...
