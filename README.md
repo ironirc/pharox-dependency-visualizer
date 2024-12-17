@@ -1,6 +1,6 @@
 # pharox-dependency-visualizer
 This tool is built on top of great existing software like Roassal and Pharo's internal dependency tools.  
-This tool helps understand/untangle dependencies.  
+This tool helps understand/untangle dependencies.
 
 # Install
 ```Smalltalk
