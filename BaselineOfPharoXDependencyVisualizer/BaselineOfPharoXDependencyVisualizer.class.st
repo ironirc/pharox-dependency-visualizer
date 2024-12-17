@@ -1,10 +1,11 @@
 Class {
-	#name : #BaselineOfPharoXDependencyVisualizer,
-	#superclass : #BaselineOf,
-	#category : #BaselineOfPharoXDependencyVisualizer
+	#name : 'BaselineOfPharoXDependencyVisualizer',
+	#superclass : 'BaselineOf',
+	#category : 'BaselineOfPharoXDependencyVisualizer',
+	#package : 'BaselineOfPharoXDependencyVisualizer'
 }
 
-{ #category : #baselines }
+{ #category : 'baselines' }
 BaselineOfPharoXDependencyVisualizer >> baseline: spec [
 	<baseline>
 
@@ -19,7 +20,7 @@ BaselineOfPharoXDependencyVisualizer >> baseline: spec [
 	]
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 BaselineOfPharoXDependencyVisualizer >> compatibility: spec [
 	"Define a 'Compatibility' group that can be used as a dependency later to overcome differences in Pharo releases"
 	
@@ -35,27 +36,28 @@ BaselineOfPharoXDependencyVisualizer >> compatibility: spec [
 "
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 BaselineOfPharoXDependencyVisualizer >> groups: spec [
 
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 BaselineOfPharoXDependencyVisualizer >> packages: spec [
 
 
 	spec package: 'Phx-Dependency-Visualizer'.
 ]
 
-{ #category : #baselines }
+{ #category : 'baselines' }
 BaselineOfPharoXDependencyVisualizer >> postload: aLoader package: aPackageSpec [
 
-	Metacello new
-    baseline: 'Roassal';
-    repository: 'github://pharo-graphics/Roassal';
-    load.
+	
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 BaselineOfPharoXDependencyVisualizer >> prerequisites: spec [
+
+	spec
+		baseline: 'Roassal'
+		with: [ spec repository: 'github://pharo-graphics/Roassal/src' ]
 ]

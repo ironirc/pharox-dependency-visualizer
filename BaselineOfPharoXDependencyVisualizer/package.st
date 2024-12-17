@@ -1,1 +1,1 @@
-Package { #name : #BaselineOfPharoXDependencyVisualizer }
+Package { #name : 'BaselineOfPharoXDependencyVisualizer' }
