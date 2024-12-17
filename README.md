@@ -42,3 +42,4 @@ DvRsWorkScope exampleWithZincAndZodiacGrouped
 - Grouping/Ungrouping manipulation directly in graph
 - Update without re-opening the window
 - ...
+- long term: Create baselines?
