@@ -41,5 +41,7 @@ DvRsWorkScope exampleWithZincAndZodiacGrouped
 - Hovering line to display actual dependencies
 - Grouping/Ungrouping manipulation directly in graph
 - Update without re-opening the window
+- Add/remove extra packages to/from scope directly in graph.
+- Make graph persistent (already some code in place)
 - ...
 - long term: Create baselines?
