@@ -16,11 +16,17 @@ To start exploring you could try:
 ```Smalltalk
 DvRsWorkScope exampleWithZincAndZodiac
 ```
-
 This gives you something like:
 ![image](https://github.com/user-attachments/assets/0f7861e1-96b2-41de-8aa4-3130ca8e6b65)
 Observe there's a cycle between Zinc-HTTP and Zinc-Resource-Meta-Core.  
 Should Zinc-Resource-Meta-Core depend on Zinc-HTTP?  
+
+Grouping packages is also possible.  
+```Smalltalk
+DvRsWorkScope exampleWithZincAndZodiacGrouped
+```
+![image](https://github.com/user-attachments/assets/1a2f1441-e2da-454f-a5c8-cfa122a6905e)
+
 
 Interact to get more insight:
 - Hover a node: green lines show de packages depended upon, red lines show packages depending on hovered node
