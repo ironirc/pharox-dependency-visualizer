@@ -29,72 +29,6 @@ self latestFileForName: 'PhxAndOthers'
 ]
 
 { #category : 'examples' }
-DvWorkScope class >> newForPhx [
-	"
-self newForPhx
-"
-
-	| patterns names wsc |
-	patterns := { 'phx*'. 'biti'. 'Pharo-home*'. '*ecg*'. '*Astigmatic*'.
-	            'Spec2-Web*' . 'MidiGigBooster*'}.
-	names := ((RPackageOrganizer default packages select: [ :p |
-		           patterns anySatisfy: [ :patt | patt match: p name ] ])
-		          collect: #name) sorted.
-	wsc := self new.
-	wsc name: 'PhxAndOthers'.
-	names do: [ :n | wsc addPackageNamed: n ].
-	wsc
-		groupPackages: [ :p |
-			('*comp23*' match: p name) or: [
-				{ 'Phx-Pj-P5-CatchGreens' } anySatisfy: [ :e | e = p name ] ] ]
-		as: 'Comp23'.
-	wsc
-		groupPackages: [ :p |
-			{ 'Phx-Pj-Core'. 'Phx-Pj-Core-Traits'. 'Phx-Pj-Dom-Builder'. 'Phx-Pj-Web-Components'. 'Phx-Pj-Testing-Framework'.
-			'Phx-Pj-Core-PubSub'. 'Phx-Pj-Core-PubSub-Testing'. 'Phx-Pj-Client-Server'. 'Phx-Pj-Core-Support' }
-				anySatisfy: [ :e | e = p name ] ]
-		as: 'Phx-Pj-Basics'.
-	wsc
-		groupPackages: [ :p | '*Phx-Pj-Core*' match: p name ]
-		as: 'Phx-Pj-Core'.
-"	wsc
-		groupPackages: [ :p |
-			(('*Phx-Crm*' match: p name) or: [
-				 { 'Phx-Seaside-Quasar-Obsolete' } anySatisfy: [ :e | e = p name ] ])
-				and: [ (#( 'Phx-Crm-Initialisations' ) includes: p name) not ] ]
-		as: 'Phx-Crm'."
-	wsc
-		groupPackages: [ :p |
-			{ 'Phx-Pj-Cordova'. 'Phx-Pj-Cordova-Experiments'.
-			'Phx-Pj-NodeJs-Reporting-Experiments' } anySatisfy: [ :e |
-				e = p name ] ]
-		as: 'Phx-Pj-Cordova'.
-	wsc
-		groupPackages: [ :p |
-			{ 'Phx-Pj-Nectar-Api'. 'Phx-Pj-Quasar-Nectar' } anySatisfy: [ :e |
-				e = p name ] ]
-		as: 'Nectar'.
-	"	wsc
-		groupPackages: [ :p | 
-			{ 'Phx-Pj-Proxy'. 'Phx-Pj-Comp21'. 'Phx-Pj-Comp22' } anySatisfy: [ 
-				:e | e = p name ] ]
-		as: 'Phx-Pj-Comp21-Comp22'."
-	wsc
-		groupPackages: [ :p |
-			{ 'Phx-Support'. 'Phx-Pharo-Extensions'. 'Phx-Pharo-Overrides'.
-			'Phx-Pharo10-Overrides' } anySatisfy: [ :e | e = p name ] ]
-		as: 'Phx-Basics'.
-	wsc
-		groupPackages: [ :p | 'Spec2-Web*' match: p name ]
-		as: 'Spec2-Web-UI'.
-	wsc
-		groupPackages: [ :p | 'MidiGigBooster*' match: p name ]
-		as: 'MGB'.
-		
-	^ wsc
-]
-
-{ #category : 'examples' }
 DvWorkScope class >> newForRoassal [
 
 	"
@@ -108,6 +42,24 @@ self exampleRoassalPackages
 		          collect: #name) sorted.
 	wsc := self new.
 	wsc name: 'Roassal packages'.
+	names do: [ :n | wsc addPackageNamed: n ].
+	^ wsc
+]
+
+{ #category : 'examples' }
+DvWorkScope class >> newForZincAndZodiac [
+
+	"
+self exampleRoassalPackages
+"
+
+	| patterns names wsc |
+	patterns := { 'Zinc*' . 'Zodiac*'}.
+	names := ((RPackageOrganizer default packages select: [ :p | 
+		           patterns anySatisfy: [ :patt | patt match: p name ] ]) 
+		          collect: #name) sorted.
+	wsc := self new.
+	wsc name: 'Zinc packages'.
 	names do: [ :n | wsc addPackageNamed: n ].
 	^ wsc
 ]

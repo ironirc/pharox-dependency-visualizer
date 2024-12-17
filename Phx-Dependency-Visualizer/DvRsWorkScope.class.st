@@ -7,38 +7,7 @@ Class {
 }
 
 { #category : 'examples' }
-DvRsWorkScope class >> phx [
-
-	<script>
-"
-DvRsWorkScope phx
-"
-	| vis c window |
-	c := RSCanvas new.
-	c addInteraction: (RSCanvasController new
-			 in: [ :i | i configuration useBasicZoom ];
-			 yourself).
-	vis := DvRsWorkScope new model: DvWorkScope newForPhx.
-	vis build.
-	c add: vis.
-	"		layout := RSForceBasedLayout new
-		autoRepulse: true;
-		charge: 300;
-		nodes: vis nodes;
-		edges: vis edges;
-		start.
-	c newAnimation repeat onStepDo: [ :t | 
-		layout step ]."
-
-	window := c openWithTitle: 'Dependencies of the Phx project'.
-	window extent: 2000 @ 1300.
-	window maximize
-	"c zoomToFit"
-	"	c inspect."
-]
-
-{ #category : 'examples' }
-DvRsWorkScope class >> roassal [
+DvRsWorkScope class >> exampleWithRoassal [
 
 	<script>
 	| vis c window |
@@ -47,6 +16,22 @@ DvRsWorkScope class >> roassal [
 			 in: [ :i | i configuration useBasicZoom ];
 			 yourself).
 	vis := DvRsWorkScope new model: DvWorkScope newForRoassal.
+	vis build.
+	c add: vis.
+	window := c openWithTitle: 'Dependencies inside Roassal'.
+	window extent: 2000 @ 1300
+]
+
+{ #category : 'examples' }
+DvRsWorkScope class >> exampleWithZincAndZodiac [
+
+	<script>
+	| vis c window |
+	c := RSCanvas new.
+	c addInteraction: (RSCanvasController new
+			 in: [ :i | i configuration useBasicZoom ];
+			 yourself).
+	vis := DvRsWorkScope new model: DvWorkScope newForZincAndZodiac.
 	vis build.
 	c add: vis.
 	window := c openWithTitle: 'Dependencies inside Roassal'.
