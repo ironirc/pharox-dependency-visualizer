@@ -94,7 +94,7 @@ DvWorkScope class >> persistPhxScope [
 { #category : 'examples' }
 DvWorkScope class >> projects [
 "NOT USED YET"
-"#('PharoHomeAssistantApi' 'PharoX' 'PharoXBasics' 'PharoXDependencyVisualizer' 'PharoXPjVue' 'PharoXRIDE')"
+"#('PharoHomeAssistantApi' 'PharoX' 'PharoXPjBasics' 'PharoXDependencyVisualizer' 'PharoXPjVue' 'PharoXRIDE')"
 	| searchStrings |
 	searchStrings := #( 'PharoHomeAssistantApi' 'pharox*' ).
 	^ ClySystemEnvironment currentImage projectManager projects select: [
