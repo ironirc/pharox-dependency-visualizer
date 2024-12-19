@@ -9,6 +9,12 @@ Class {
 	#tag : 'visualisation'
 }
 
+{ #category : 'menu' }
+DvRsPackage >> baselines [
+	^BaselineOf allSubclasses select: [ :e | e allPackageNames includes: self model name ].
+
+]
+
 { #category : 'building' }
 DvRsPackage >> build [
 
@@ -46,6 +52,13 @@ DvRsPackage >> handleAnnouncementAspectChanged: a [
 		labelShape := sh shapeFromModel: a aspect.
 		labelShape text: a model name.
 		self canvas signalUpdate ]
+]
+
+{ #category : 'menu' }
+DvRsPackage >> handleBrowseBaseline: aBaseLineClass [
+
+	self stopAndRemoveAllAnimations.
+	aBaseLineClass browse
 ]
 
 { #category : 'menu' }
@@ -113,13 +126,20 @@ DvRsPackage >> showMenu: evt [
 		target: self
 		selector: #handleBrowseEvent:
 		argument: evt.
+	self baselines do: [ :bl |
+		menu
+			add: 'browse baseline: ' , bl name
+			target: self
+			selector: #handleBrowseBaseline:
+			argument: bl ].
+
 	menu addLine.
 	menu
 		add: 'open dependency analyzer'
 		target: self
 		selector: #handleShowDependencyAnalyserEvent:
 		argument: evt.
-		menu
+	menu
 		add: 'inspect'
 		target: self
 		selector: #handleInspectEvent:
