@@ -86,6 +86,17 @@ DvRsWorkScope >> applyLayoutHierarchical [
 		iterations: 100;
 		runLayoutSimply.
 "
+
+"
+	DvForceBasedLayout new
+		doNotUseProgressBar;
+		""autoRepulse: true;""alpha: 0.1;
+		charge: -3000;
+		""nodes: self nodes;""edges: self edges;
+		iterations: 300;
+		enclosingRectangle: (0 @ 0 extent: 3000 @ 3000);
+		executeOnElements: self nodes
+"
 ]
 
 { #category : 'build' }
@@ -150,7 +161,7 @@ DvRsWorkScope >> newLineBuilder [
 
 	| marker |
 	marker := self marker.
-	^ RSLineBuilder bezier
+	^ RSLineBuilder bezier "needs to be (temporary?) RSLineBuilder line, when using force based layout"
 		  markerStart: marker;
 		  attachPoint: (RSHorizontalAttachPoint new
 				   endOffset: marker shape height / -2;
