@@ -95,6 +95,11 @@ DvRsWorkScope >> build [
 	self buildPackageGroups.
 	self connectAllPackages.
 	self applyLayoutHierarchical.
+	"self nodes do: [ :n |
+		n
+			when: RSPositionChangedEvent
+			do: [ self adjustToChildren ]
+			for: self ]."
 	self nodes @ self highlightable.
 	self adjustToChildren.
 	lines pushBack
