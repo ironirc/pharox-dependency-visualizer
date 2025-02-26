@@ -78,9 +78,7 @@ DvInAndOutHighlitable >> highlightBoxes: boxes withColor: aColor [
 		| shadow |
 		shadow := self shadowFor: box.
 		shadow color: aColor.
-		box
-			when: RSPositionChangedEvent
-			do: [ :evt | shadow position: evt newPosition ].
+		box when: RSPositionChangedEvent do: [ :evt | shadow position: evt newPosition ].
 		box propertyAt: #shadow put: shadow.
 		canv addShape: shadow.
 		shadow pushBack ]
