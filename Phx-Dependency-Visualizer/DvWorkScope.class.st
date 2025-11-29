@@ -238,7 +238,7 @@ DvWorkScope >> packageRelationGraph [
 
 	packageRelationGraph ifNil: [ 
 		| g |
-		g := DAPackageRelationGraph onPackagesNamed: self packageNames.
+		g := StPackageRelationGraph onPackagesNamed: self packageNames.
 		g computeStaticDependencies.
 		g removeInternalDependencies.
 		g combineDependencies.

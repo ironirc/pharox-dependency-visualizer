@@ -91,7 +91,7 @@ DvRsPackageGroup >> handleRename [
 DvRsPackageGroup >> handleShowDependencyAnalyserEvent: anEvent [
 
 	self stopAndRemoveAllAnimations.
-	(DAPackageDependenciesPresenter onPackagesNamed:
+	(StPackageDependenciesPresenter onPackagesNamed:
 		 (self model packages collect: #name)) open
 ]
 

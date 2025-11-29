@@ -64,7 +64,7 @@ DvRsPackage >> handleBrowseBaseline: aBaseLineClass [
 { #category : 'menu' }
 DvRsPackage >> handleBrowseEvent: evt [
 	self  stopAndRemoveAllAnimations.
-	(RPackageOrganizer default packageNamed: self model name) browse
+	(PackageOrganizer default packageNamed: self model name) browse
 
 ]
 
@@ -78,7 +78,7 @@ DvRsPackage >> handleInspectEvent: evt [
 { #category : 'menu' }
 DvRsPackage >> handleShowDependencyAnalyserEvent: anEvent [
 	self stopAndRemoveAllAnimations.
-	(DAPackageDependenciesPresenter onPackagesNamed:
+	(StPackageDependenciesPresenter onPackagesNamed:
 		 { self model name }) open
 ]
 
