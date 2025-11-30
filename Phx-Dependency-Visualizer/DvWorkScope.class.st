@@ -37,7 +37,7 @@ self exampleRoassalPackages
 
 	| patterns names wsc |
 	patterns := { 'Roassal*' }.
-	names := ((RPackageOrganizer default packages select: [ :p | 
+	names := ((PackageOrganizer default packages select: [ :p | 
 		           patterns anySatisfy: [ :patt | patt match: p name ] ]) 
 		          collect: #name) sorted.
 	wsc := self new.
@@ -55,7 +55,7 @@ self exampleRoassalPackages
 
 	| patterns names wsc |
 	patterns := { 'Zinc*' . 'Zodiac*'}.
-	names := ((RPackageOrganizer default packages select: [ :p | 
+	names := ((PackageOrganizer default packages select: [ :p | 
 		           patterns anySatisfy: [ :patt | patt match: p name ] ]) 
 		          collect: #name) sorted.
 	wsc := self new.
@@ -72,7 +72,7 @@ self exampleRoassalPackages
 
 	| patterns names wsc |
 	patterns := { 'Zinc*'. 'Zodiac*' }.
-	names := ((RPackageOrganizer default packages select: [ :p |
+	names := ((PackageOrganizer default packages select: [ :p |
 		           patterns anySatisfy: [ :patt | patt match: p name ] ])
 		          collect: #name) sorted.
 	wsc := self new.
